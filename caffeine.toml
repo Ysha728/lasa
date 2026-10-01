@@ -1,0 +1,11 @@
+manifest_version = "0.1.0"
+
+[project]
+id = "my-app"
+name = "my-app"
+
+[workspace]
+include = ["src/**"]
+
+[canisters.frontend]
+depends_on = ["backend"]

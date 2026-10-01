@@ -1,0 +1,16 @@
+manifest_version = "0.1.0"
+
+[project]
+name = "backend"
+type = "motoko"
+main = "main.mo"
+
+[build]
+commands = ["mops build", "pnpm bindgen"]
+out = "dist"
+
+[check]
+commands = ["mops check"]
+
+[check.fix]
+commands = ["mops check --fix"]

@@ -1,0 +1,16 @@
+packages:
+  - src/**/*
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - esbuild
+  - sharp
+# @dfinity/pic's postinstall downloads a PocketIC server binary from GitHub
+# releases (~50MB gzipped, larger on disk) and throws if the download fails.
+# The backend test lane talks to the platform's PocketIC sidecar over
+# POCKETIC_SIDECAR_URL and never starts a server of its own, so the binary is
+# dead weight and fetching it would make every build container depend on GitHub
+# being reachable. pnpm already declines unlisted build scripts by default;
+# naming it here makes that explicit and keeps the warning out of build logs.
+# The client library the lane imports is unaffected.
+ignoredBuiltDependencies:
+  - '@dfinity/pic'

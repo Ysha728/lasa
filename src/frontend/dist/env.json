@@ -1,0 +1,7 @@
+{
+  "backend_host": "undefined",
+  "backend_canister_id": "undefined",
+  "project_id": "undefined",
+  "ii_derivation_origin": "undefined",
+  "storage_gateway_url": "undefined"
+}

@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Figtree";
+  src: url("/assets/fonts/Figtree.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/assets/fonts/JetBrainsMono.woff2") format("woff2");
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --font-display: "Fraunces", serif;
+    --font-body: "Figtree", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+    --radius: 1.25rem;
+
+    /* LASA Lavender Harvest — light theme (primary) */
+    --background: 0.975 0.014 300;
+    --foreground: 0.22 0.055 300;
+    --card: 1.0 0.004 300;
+    --card-foreground: 0.22 0.055 300;
+    --popover: 1.0 0.004 300;
+    --popover-foreground: 0.22 0.055 300;
+
+    --primary: 0.52 0.235 300;
+    --primary-foreground: 0.99 0.008 300;
+
+    --secondary: 0.93 0.028 300;
+    --secondary-foreground: 0.3 0.06 300;
+    --muted: 0.94 0.022 300;
+    --muted-foreground: 0.5 0.045 300;
+
+    --accent: 0.72 0.17 330;
+    --accent-foreground: 0.2 0.06 330;
+
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 0.99 0.008 25;
+
+    --success: 0.68 0.16 145;
+    --success-foreground: 0.2 0.05 145;
+    --warning: 0.78 0.15 85;
+    --warning-foreground: 0.25 0.06 85;
+
+    --border: 0.9 0.03 300;
+    --input: 0.9 0.03 300;
+    --ring: 0.52 0.235 300;
+
+    --chart-1: 0.55 0.24 300;
+    --chart-2: 0.72 0.17 330;
+    --chart-3: 0.78 0.16 130;
+    --chart-4: 0.7 0.16 55;
+    --chart-5: 0.6 0.18 250;
+
+    --sidebar: 0.98 0.016 300;
+    --sidebar-foreground: 0.22 0.055 300;
+    --sidebar-primary: 0.52 0.235 300;
+    --sidebar-primary-foreground: 0.99 0.008 300;
+    --sidebar-accent: 0.93 0.028 300;
+    --sidebar-accent-foreground: 0.3 0.06 300;
+    --sidebar-border: 0.9 0.03 300;
+    --sidebar-ring: 0.52 0.235 300;
+
+    /* Atmosphere & signature tokens */
+    --gradient-primary: linear-gradient(
+      135deg,
+      oklch(0.55 0.24 300) 0%,
+      oklch(0.62 0.2 325) 100%
+    );
+    --gradient-subtle: linear-gradient(
+      180deg,
+      oklch(0.985 0.016 300) 0%,
+      oklch(0.95 0.03 300) 100%
+    );
+    --gradient-text: linear-gradient(
+      120deg,
+      oklch(0.45 0.24 300) 0%,
+      oklch(0.6 0.21 330) 100%
+    );
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .dark {
+    --background: 0.16 0.03 300;
+    --foreground: 0.94 0.02 300;
+    --card: 0.2 0.035 300;
+    --card-foreground: 0.94 0.02 300;
+    --popover: 0.22 0.038 300;
+    --popover-foreground: 0.94 0.02 300;
+
+    --primary: 0.72 0.19 300;
+    --primary-foreground: 0.16 0.04 300;
+
+    --secondary: 0.25 0.04 300;
+    --secondary-foreground: 0.86 0.025 300;
+    --muted: 0.25 0.04 300;
+    --muted-foreground: 0.68 0.04 300;
+
+    --accent: 0.75 0.15 330;
+    --accent-foreground: 0.16 0.04 330;
+
+    --destructive: 0.65 0.19 25;
+    --destructive-foreground: 0.16 0.03 25;
+
+    --success: 0.72 0.15 145;
+    --success-foreground: 0.16 0.03 145;
+    --warning: 0.8 0.14 85;
+    --warning-foreground: 0.18 0.04 85;
+
+    --border: 0.3 0.04 300;
+    --input: 0.3 0.04 300;
+    --ring: 0.72 0.19 300;
+
+    --chart-1: 0.72 0.19 300;
+    --chart-2: 0.75 0.15 330;
+    --chart-3: 0.8 0.16 130;
+    --chart-4: 0.75 0.15 55;
+    --chart-5: 0.7 0.16 250;
+
+    --sidebar: 0.2 0.035 300;
+    --sidebar-foreground: 0.94 0.02 300;
+    --sidebar-primary: 0.72 0.19 300;
+    --sidebar-primary-foreground: 0.16 0.04 300;
+    --sidebar-accent: 0.25 0.04 300;
+    --sidebar-accent-foreground: 0.86 0.025 300;
+    --sidebar-border: 0.3 0.04 300;
+    --sidebar-ring: 0.72 0.19 300;
+
+    --gradient-primary: linear-gradient(
+      135deg,
+      oklch(0.68 0.2 300) 0%,
+      oklch(0.72 0.17 330) 100%
+    );
+    --gradient-subtle: linear-gradient(
+      180deg,
+      oklch(0.18 0.032 300) 0%,
+      oklch(0.22 0.04 300) 100%
+    );
+    --gradient-text: linear-gradient(
+      120deg,
+      oklch(0.82 0.16 300) 0%,
+      oklch(0.78 0.15 330) 100%
+    );
+  }
+
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  .transition-spring {
+    transition: var(--transition-spring);
+  }
+  .bg-gradient-primary {
+    background-image: var(--gradient-primary);
+  }
+  .bg-gradient-subtle {
+    background-image: var(--gradient-subtle);
+  }
+  .text-gradient {
+    background-image: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .shadow-subtle {
+    box-shadow: 0 1px 2px oklch(0.52 0.235 300 / 0.06), 0 4px 12px
+      oklch(0.52 0.235 300 / 0.06);
+  }
+  .shadow-elevated {
+    box-shadow: 0 4px 10px oklch(0.52 0.235 300 / 0.08), 0 16px 40px
+      oklch(0.52 0.235 300 / 0.14);
+  }
+  .shadow-glow {
+    box-shadow: 0 8px 30px oklch(0.6 0.21 330 / 0.28);
+  }
+  .glass {
+    background-color: oklch(1 0 0 / 0.72);
+    backdrop-filter: blur(14px) saturate(1.4);
+  }
+  .dark .glass {
+    background-color: oklch(0.2 0.035 300 / 0.7);
+  }
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(64px);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

@@ -1,0 +1,147 @@
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type Timestamp = nat;
+type SuggestionInput = 
+ record {
+   category: SuggestionCategory;
+   name: opt text;
+   "text": text;
+ };
+type SuggestionCategory = 
+ variant {
+   filipinoFood;
+   internationalFood;
+   topic;
+   websiteImprovement;
+ };
+type Suggestion = 
+ record {
+   category: SuggestionCategory;
+   createdAt: Timestamp;
+   id: nat;
+   name: opt text;
+   "text": text;
+ };
+type ReviewStats = 
+ record {
+   average: float64;
+   count: nat;
+   foodId: FoodId;
+ };
+type ReviewInput = 
+ record {
+   foodId: FoodId;
+   rating: nat;
+   reviewerName: text;
+   "text": text;
+ };
+type Review = 
+ record {
+   createdAt: Timestamp;
+   foodId: FoodId;
+   id: nat;
+   rating: nat;
+   reviewerName: text;
+   "text": text;
+ };
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type FoodId = nat;
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type CommentInput = 
+ record {
+   authorName: text;
+   foodId: FoodId;
+   "text": text;
+ };
+type Comment = 
+ record {
+   authorName: text;
+   createdAt: Timestamp;
+   foodId: FoodId;
+   id: nat;
+   "text": text;
+ };
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+/// LASA composition root: owns stable state and wires domain mixins.
+/// No business logic lives here — every endpoint is delegated to a mixin.
+service : {
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  execute: (qJson: text) -> (Result) query;
+  /// Return the backend API documentation as Markdown.
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole) query;
+  /// Average rating and review count for one food.
+  getReviewStats: (foodId: nat) -> (ReviewStats) query;
+  isCallerAdmin: () -> (bool) query;
+  /// List all comments, newest first.
+  listComments: () -> (vec Comment) query;
+  /// List the caller's explored food ids.
+  listExplored: () -> (vec nat) query;
+  /// List the caller's favorite food ids.
+  listFavorites: () -> (vec nat) query;
+  /// List all submitted reviews, newest first.
+  listReviews: () -> (vec Review) query;
+  /// List all submitted suggestions, newest first.
+  listSuggestions: () -> (vec Suggestion) query;
+  /// Mark a food as explored for the caller; returns the new state.
+  markExplored: (foodId: nat) -> (bool);
+  schema: () -> (text) query;
+  /// Leave a food-related comment.
+  submitComment: (input: CommentInput) -> (Comment);
+  /// Submit a review with a 1-5 star rating, reviewer name, and review text.
+  submitReview: (input: ReviewInput) -> (Review);
+  /// Submit a food, topic, or website-improvement suggestion.
+  submitSuggestion: (input: SuggestionInput) -> (Suggestion);
+  /// Toggle a food as favorite for the caller; returns the new state.
+  toggleFavorite: (foodId: nat) -> (bool);
+}

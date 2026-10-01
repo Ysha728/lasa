@@ -1,0 +1,130 @@
+// Version: 4.0.0
+type AccessControlState__201339279 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__230067015<Principal, UserRole__91647283>
+  };
+type Comment__1026992284 =
+  {
+    authorName : Text;
+    createdAt : Timestamp__301639476;
+    foodId : FoodId__269372126;
+    id : Nat;
+    text : Text
+  };
+type Comment__687193900 =
+  {authorName : Text; createdAt : Nat; foodId : Nat; id : Nat; text : Text};
+type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
+type Favorite__263231092 = {foodId : FoodId__269372126; owner : Principal};
+type Favorite__996891405 = {foodId : Nat; owner : Principal};
+type FoodId__269372126 = Nat;
+type Internal__283199666<K, V> =
+  {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
+type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
+type Map__230067015<K, V> = Map__405889023<K, V>;
+type Map__405889023<K, V> = Map__603270868<K, V>;
+type Map__603270868<K, V> =
+  {var root : Node__204828119<K, V>; var size : Nat__227979830};
+type Nat__227979830 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__712516871 =
+  {
+    accessControlState : AccessControlState__201339279;
+    comments : Map__230067015<Nat, Comment__687193900>;
+    favorites :
+      Map__230067015<Principal, Map__230067015<Nat, Favorite__996891405>>;
+    nextCommentId : {var value : Nat};
+    nextReviewId : {var value : Nat};
+    nextSuggestionId : {var value : Nat};
+    passport :
+      Map__230067015<Principal, Map__230067015<Nat, PassportEntry__295426892>>;
+    reviews : Map__230067015<Nat, Review__1048486306>;
+    suggestions : Map__230067015<Nat, Suggestion__254031854>
+  };
+type Node__204828119<K, V> =
+  {#internal : Internal__283199666<K, V>; #leaf : Leaf__598469445<K, V>};
+type OldActor__511848114 = {};
+type PassportEntry__1024633675 =
+  {foodId : FoodId__269372126; owner : Principal};
+type PassportEntry__295426892 = {foodId : Nat; owner : Principal};
+type Review__1048486306 =
+  {
+    createdAt : Nat;
+    foodId : Nat;
+    id : Nat;
+    rating : Nat;
+    reviewerName : Text;
+    text : Text
+  };
+type Review__513345496 =
+  {
+    createdAt : Timestamp__301639476;
+    foodId : FoodId__269372126;
+    id : Nat;
+    rating : Nat;
+    reviewerName : Text;
+    text : Text
+  };
+type SuggestionCategory__68054116 =
+  {#filipinoFood; #internationalFood; #topic; #websiteImprovement};
+type SuggestionCategory__7855536 =
+  {#filipinoFood; #internationalFood; #topic; #websiteImprovement};
+type Suggestion__254031854 =
+  {
+    category : SuggestionCategory__68054116;
+    createdAt : Nat;
+    id : Nat;
+    name : ?Text;
+    text : Text
+  };
+type Suggestion__998070219 =
+  {
+    category : SuggestionCategory__7855536;
+    createdAt : Timestamp__301639476;
+    id : Nat;
+    name : ?Text;
+    text : Text
+  };
+type Timestamp__301639476 = Nat;
+type UserRole__91647283 = {#admin; #guest; #user};
+{
+  "20261001_000000" : OldActor__511848114 -> NewActor__712516871
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__230067015<Principal, UserRole__91647283>
+    };
+  stable comments :
+    {
+      var root : Node__204828119<Nat, Comment__1026992284>;
+      var size : Nat__227979830
+    };
+  stable favorites :
+    {
+      var root :
+        Node__204828119<Principal, Map__230067015<Nat, Favorite__263231092>>;
+      var size : Nat__227979830
+    };
+  stable nextCommentId : {var value : Nat};
+  stable nextReviewId : {var value : Nat};
+  stable nextSuggestionId : {var value : Nat};
+  stable passport :
+    {
+      var root :
+        Node__204828119<Principal,
+                         Map__230067015<Nat, PassportEntry__1024633675>>;
+      var size : Nat__227979830
+    };
+  stable reviews :
+    {
+      var root : Node__204828119<Nat, Review__513345496>;
+      var size : Nat__227979830
+    };
+  stable suggestions :
+    {
+      var root : Node__204828119<Nat, Suggestion__998070219>;
+      var size : Nat__227979830
+    }
+};
