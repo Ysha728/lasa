@@ -42,17 +42,15 @@ export function VideoCard({
         {isPlaying ? (
           <div className="h-full w-full bg-foreground/90">
             {video.videoUrl ? (
-              // Real video: a responsive inline player that fills the card.
-              <video
-                data-ocid={`video.player.${video.id}`}
-                src={video.videoUrl}
-                controls
-                autoPlay
-                playsInline
-                className="h-full w-full object-cover"
-              >
-                <track kind="captions" />
-              </video>
+  <iframe
+    data-ocid={`video.player.${video.id}`}
+    src={`${video.videoUrl}?autoplay=1`}
+    title={video.title}
+    className="h-full w-full"
+    allow="autoplay; encrypted-media; picture-in-picture"
+    allowFullScreen
+  />
+) : (
             ) : (
               // Placeholder: no real file yet, so explain how to swap it in.
               <div
