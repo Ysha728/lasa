@@ -42,34 +42,16 @@ export function VideoCard({
         {isPlaying ? (
           <div className="h-full w-full bg-foreground/90">
             {video.videoUrl ? (
-  <video
-    data-ocid={`video.player.${video.id}`}
-    src={video.videoUrl}
-    controls
-    autoPlay
-    playsInline
-    className="h-full w-full object-cover"
-  >
-    <track kind="captions" />
-  </video>
-) : (
-  <div
-    data-ocid={`video.placeholder_state.${video.id}`}
-    className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
-  >
-    <Video
-      className="h-8 w-8 text-primary-foreground/80"
-      aria-hidden="true"
-    />
-    <p className="font-display text-base font-semibold text-primary-foreground">
-      Video coming soon
-    </p>
-    <p className="text-xs leading-relaxed text-primary-foreground/70">
-      Add a real link in{" "}
-      <span className="font-mono">data/videos.ts</span> to play it here.
-    </p>
-  </div>
-)}
+               <video
+  data-ocid={`video.player.${video.id}`}
+  src={video.videoUrl}
+  controls
+  autoPlay
+  playsInline
+  className="h-full w-full object-cover"
+>
+  <track kind="captions" />
+</video>
                      
               // Placeholder: no real file yet, so explain how to swap it in.
               <div
