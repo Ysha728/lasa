@@ -39,7 +39,7 @@ export const FOODS: Food[] = [
       "Bacolod holds an annual Chicken Inasal Festival celebrating the dish.",
       "Locals eat it with bare hands, dipping each bite in sinamak vinegar.",
     ],
-    image: "lasa/assets/images/chicken-inasal.jpg",
+    image: "/lasa/assets/images/chicken-inasal.jpg",
     emoji: "🍗",
   },
   {
@@ -70,7 +70,7 @@ export const FOODS: Food[] = [
       "The dish is even better the next day as the flavors deepen.",
       "Fresh taro leaves must be cooked thoroughly — they are itchy when raw.",
     ],
-    image: "lasa/assets/images/laing.jpg",
+    image: "/lasa/assets/images/laing.jpg",
     emoji: "🥬",
   },
   {
@@ -101,7 +101,7 @@ export const FOODS: Food[] = [
       "Batangas bulalo spots are a classic stop on the way to Tagaytay.",
       "The broth is traditionally kept clear rather than thick.",
     ],
-    image: "lasa/assets/images/bulalo.jpg",
+    image: "/lasa/assets/images/bulalo.jpg",
     emoji: "🍲",
   },
   {
@@ -130,7 +130,7 @@ export const FOODS: Food[] = [
       "True Neapolitan pizza has a soft, foldable center.",
       "Naples has an association that certifies authentic Neapolitan pizza.",
     ],
-    image: "lasa/assets/images/pizza.jpg",
+    image: "/lasa/assets/images/pizza.jpg",
     emoji: "🍕",
   },
   {
@@ -161,7 +161,7 @@ export const FOODS: Food[] = [
       "Valencia's original paella uses rabbit and chicken, not seafood.",
       "The word 'paella' comes from the Latin word for pan.",
     ],
-    image: "lasa/assets/images/paella.jpg",
+    image: "/lasa/assets/images/paella.jpg",
     emoji: "🥘",
   },
   {
@@ -192,7 +192,7 @@ export const FOODS: Food[] = [
       "The world's largest burger chains turned it into a global staple.",
       "A 'smash burger' sears the patty for a crisp, lacy crust.",
     ],
-    image: "lasa/assets/images/hamburger.jpg",
+    image: "/lasa/assets/images/hamburger.jpg",
     emoji: "🍔",
   },
 ];
