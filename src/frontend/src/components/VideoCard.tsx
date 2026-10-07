@@ -42,15 +42,15 @@ export function VideoCard({
         {isPlaying ? (
           <div className="h-full w-full bg-foreground/90">
             {video.videoUrl ? (
-  <iframe
-    data-ocid={`video.player.${video.id}`}
-    src={`${video.videoUrl}?autoplay=1`}
-    title={video.title}
-    className="h-full w-full"
-    allow="autoplay; encrypted-media; picture-in-picture"
-    allowFullScreen
-  />
-) : (
+               <iframe
+                  data-ocid={`video.player.${video.id}`}
+                  src={`${video.videoUrl}?autoplay=1`
+                  title={video.title}
+                  className="h-full w-full"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                 allowFullScreen
+               />
+       ) : (
             ) : (
               // Placeholder: no real file yet, so explain how to swap it in.
               <div
@@ -84,7 +84,7 @@ export function VideoCard({
                 ×
               </span>
             </button>
-          </div>
+          </div> 
         ) : (
           <>
             <img
