@@ -42,16 +42,17 @@ export function VideoCard({
         {isPlaying ? (
           <div className="h-full w-full bg-foreground/90">
             {video.videoUrl ? (
-                {video.videoUrl ? (
-  <iframe
-    data-ocid={`video.player.${video.id}`}
-    src={video.videoUrl}
-    title={video.title}
-    className="h-full w-full"
-    allow="autoplay; encrypted-media; picture-in-picture"
-    allowFullScreen
-  />
-) : (
+                <video
+  data-ocid={`video.player.${video.id}`}
+  src={video.videoUrl}
+  controls
+  autoPlay
+  playsInline
+  className="h-full w-full object-cover"
+>
+  <track kind="captions" />
+</video>
+                     
               // Placeholder: no real file yet, so explain how to swap it in.
               <div
                 data-ocid={`video.placeholder_state.${video.id}`}
