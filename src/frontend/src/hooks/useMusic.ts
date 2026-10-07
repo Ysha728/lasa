@@ -11,7 +11,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "lasa:music-enabled";
-const TRACK_SRC = "/assets/audio/lasa-theme.mp3";
+const TRACK_SRC = "/lasa/assets/audio/lasa-theme.mp3";
 
 function readStoredPreference(): boolean {
   if (typeof window === "undefined") return false;
