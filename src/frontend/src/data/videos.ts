@@ -52,8 +52,8 @@ export const FOOD_VIDEOS: FoodVideo[] = [
     title: "Grilling Chicken Inasal",
     description:
       "Watch the annatto basting and charcoal smoke that give inasal its glow.",
-    thumbnail: "/assets/images/chicken-inasal.jpg",
-    videoUrl: "",
+    thumbnail: "/lasa/assets/images/chicken-inasal.jpg",
+    videoUrl: "https://youtu.be/7Gei0KO60yU?si=30KSVaYoxsX6QkIH",
     isPlaceholder: true,
   },
   {
