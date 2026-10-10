@@ -29,18 +29,34 @@ export function VideoCard({
     >
       <div className="relative aspect-video overflow-hidden bg-muted">
         {isPlaying ? (
-          <div className="h-full w-full bg-foreground/90">
-            {video.videoUrl ? (
-              
-<iframe
-  data-ocid={`video.player.${video.id}`}
-  src={video.videoUrl}
-  title={video.title}
-  className="h-full w-full"
-  allow="autoplay; encrypted-media; picture-in-picture"
-  allowFullScreen
-/>
-            
+          <div className="h-full w-full bg-foreground/90"      
+{video.videoUrl ? (
+  <iframe
+    data-ocid={`video.player.${video.id}`}
+    src={video.videoUrl}
+    title={video.title}
+    className="h-full w-full"
+    allow="autoplay; encrypted-media; picture-in-picture"
+    allowFullScreen
+  />
+) : (
+  <div
+    data-ocid={`video.placeholder_state.${video.id}`}
+    className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
+  >
+    <Video
+      className="h-8 w-8 text-primary-foreground/80"
+      aria-hidden="true"
+    />
+    <p className="font-display text-base font-semibold text-primary-foreground">
+      Video coming soon
+    </p>
+    <p className="text-xs leading-relaxed text-primary-foreground/70">
+      Add a real video link in{" "}
+      <span className="font-mono">data/videos.ts</span> to play it here.
+    </p>
+  </div>
+)}  
               <div
                 data-ocid={`video.placeholder_state.${video.id}`}
                 className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
