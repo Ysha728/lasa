@@ -61,9 +61,9 @@ export const FOOD_VIDEOS: FoodVideo[] = [
     title: "Simmering Laing Low and Slow",
     description:
       "Taro leaves and coconut milk coming together into a creamy Bicolano classic.",
-    thumbnail: "/assets/images/laing.jpg",
-    videoUrl: "",
-    isPlaceholder: true,
+    thumbnail: "/lasa/assets/images/laing.jpg",
+    videoUrl: "https://www.youtube.com/embed/APn5op5HpgY",
+    isPlaceholder: false,
   },
   {
     id: "bulalo",
