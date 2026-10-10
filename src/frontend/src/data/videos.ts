@@ -53,7 +53,7 @@ export const FOOD_VIDEOS: FoodVideo[] = [
     description:
       "Watch the annatto basting and charcoal smoke that give inasal its glow.",
     thumbnail: "/lasa/assets/images/chicken-inasal.jpg",
-    videoUrl: "https://youtu.be/7Gei0KO60yU?si=H1AsF2IdQdiYyZwf",
+    videoUrl: "https://www.youtube.com/embed/7GeiOK060yU",
     isPlaceholder: false,
   },
   {
