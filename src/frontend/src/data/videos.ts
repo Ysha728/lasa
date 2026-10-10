@@ -70,9 +70,9 @@ export const FOOD_VIDEOS: FoodVideo[] = [
     title: "A Pot of Bulalo for Rainy Days",
     description:
       "Hours of gentle boiling until the beef falls apart and the broth runs clear.",
-    thumbnail: "/assets/images/bulalo.jpg",
-    videoUrl: "",
-    isPlaceholder: true,
+    thumbnail: "/lasa/assets/images/bulalo.jpg",
+    videoUrl: "https://www.youtube.com/embed/xC0c4fm1KRE",
+    isPlaceholder: false,
   },
   {
     id: "pizza",
