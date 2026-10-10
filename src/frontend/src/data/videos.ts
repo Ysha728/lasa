@@ -79,26 +79,26 @@ export const FOOD_VIDEOS: FoodVideo[] = [
     title: "Ninety Seconds in a Wood-Fired Oven",
     description:
       "Stretching the dough and watching a Neapolitan pizza puff and char.",
-    thumbnail: "/assets/images/pizza.jpg",
-    videoUrl: "",
-    isPlaceholder: true,
+    thumbnail: "/lasa/assets/images/pizza.jpg",
+    videoUrl: "https://www.youtube.com/embed/ZNaFdxhIUAo",
+    isPlaceholder: false,
   },
   {
     id: "paella",
     title: "Chasing the Perfect Socarrat",
     description:
       "Saffron rice cooked wide and shallow until the bottom crisps just right.",
-    thumbnail: "/assets/images/paella.jpg",
-    videoUrl: "",
-    isPlaceholder: true,
+    thumbnail: "/lasa/assets/images/paella.jpg",
+    videoUrl: "https://www.youtube.com/embed/08W7LZDtnEI",
+    isPlaceholder: false,
   },
   {
     id: "hamburger",
     title: "Building the Classic Burger",
     description:
       "A juicy grilled patty stacked with cheese and fresh toppings in a toasted bun.",
-    thumbnail: "/assets/images/hamburger.jpg",
-    videoUrl: "",
-    isPlaceholder: true,
+    thumbnail: "/lasa/assets/images/hamburger.jpg",
+    videoUrl: "https://www.youtube.com/embed/iM_KMYulI_s",
+    isPlaceholder: false,
   },
 ];
