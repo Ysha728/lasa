@@ -1,10 +1,4 @@
-/**
- * VideoCard — a single video card for the Food Videos section.
- *
- * Shows a thumbnail, title, short description, and a play button. When the
- * visitor presses play, the card swaps the thumbnail for an inline, responsive
- * video player (or a friendly notice while the video is still a placeholder).
- */
+
 import { Badge } from "@/components/ui/badge";
 import type { FoodVideo } from "@/data/videos";
 import { cn } from "@/lib/utils";
@@ -12,13 +6,9 @@ import { Play, Video } from "lucide-react";
 
 interface VideoCardProps {
   video: FoodVideo;
-  /** Whether this card is the one currently showing its inline player. */
   isPlaying: boolean;
-  /** Called when the visitor presses the play button. */
   onPlay: (videoId: string) => void;
-  /** Called when the visitor closes the inline player. */
   onClose: () => void;
-  /** Optional extra classes for layout tweaks at the call site. */
   className?: string;
 }
 
@@ -37,41 +27,21 @@ export function VideoCard({
         className,
       )}
     >
-      {/* Media area: either the thumbnail with a play button, or the player. */}
       <div className="relative aspect-video overflow-hidden bg-muted">
         {isPlaying ? (
           <div className="h-full w-full bg-foreground/90">
             {video.videoUrl ? (
-               <video
-                 data-ocid={`video.player.${video.id}`}
-                 src={video.videoUrl}
-                 controls
-                 autoPlay
-                 playsInline
-                 className="h-full w-full object-cover"
-                 >
-              <track kind="captions" />
+              <video
+                data-ocid={`video.player.${video.id}`}
+                src={video.videoUrl}
+                controls
+                autoPlay
+                playsInline
+                className="h-full w-full object-cover"
+              >
+                <track kind="captions" />
               </video>
-           ) : (
-               <div
-              data-ocid={`video.placeholder_state.${video.id}`}
-              className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
-             >
-             <Video
-             className="h-8 w-8 text-primary-foreground/80"
-             aria-hidden="true"
-             />
-             <p className="font-display text-base font-semibold text-primary-foreground">
-                Video coming soon
-             </p>
-             <p className="text-xs leading-relaxed text-primary-foreground/70">
-               Add a real link in{" "}
-             <span className="font-mono">data/videos.ts</span> to play it here.
-           </p>
-         </div>
-         )}
-               
-              // Placeholder: no real file yet, so explain how to swap it in.
+            ) : (
               <div
                 data-ocid={`video.placeholder_state.${video.id}`}
                 className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
@@ -84,14 +54,13 @@ export function VideoCard({
                   Video coming soon
                 </p>
                 <p className="text-xs leading-relaxed text-primary-foreground/70">
-                  Add a real link in{" "}
+                  Add a real video file in{" "}
                   <span className="font-mono">data/videos.ts</span> to play it
                   here.
                 </p>
               </div>
             )}
 
-            {/* Close button returns the card to its thumbnail state. */}
             <button
               type="button"
               data-ocid={`video.close_button.${video.id}`}
@@ -103,7 +72,7 @@ export function VideoCard({
                 ×
               </span>
             </button>
-          </div> 
+          </div>
         ) : (
           <>
             <img
@@ -113,13 +82,11 @@ export function VideoCard({
               className="h-full w-full object-cover transition-smooth group-hover:scale-105"
             />
 
-            {/* Dark scrim keeps the play button readable over any photo. */}
             <div
               aria-hidden="true"
               className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/10 to-transparent"
             />
 
-            {/* Play button — the card's primary action. */}
             <button
               type="button"
               data-ocid={`video.play_button.${video.id}`}
@@ -135,7 +102,6 @@ export function VideoCard({
               </span>
             </button>
 
-            {/* Visible placeholder label so stand-ins are never mistaken. */}
             {video.isPlaceholder && (
               <Badge
                 variant="secondary"
@@ -148,7 +114,6 @@ export function VideoCard({
         )}
       </div>
 
-      {/* Text body: title and short description. */}
       <div className="flex flex-1 flex-col gap-2 p-5">
         <h3 className="font-display text-lg font-semibold leading-tight text-card-foreground">
           {video.title}
