@@ -19,6 +19,9 @@ export function VideoCard({
   onClose,
   className,
 }: VideoCardProps) {
+  const isYouTube = video.videoUrl.includes("youtube.com/embed/") ||
+    video.videoUrl.includes("youtube-nocookie.com/embed/");
+
   return (
     <article
       data-ocid={`video.card.${video.id}`}
@@ -29,34 +32,30 @@ export function VideoCard({
     >
       <div className="relative aspect-video overflow-hidden bg-muted">
         {isPlaying ? (
-          <div className="h-full w-full bg-foreground/90"      
-{video.videoUrl ? (
-  <iframe
-    data-ocid={`video.player.${video.id}`}
-    src={video.videoUrl}
-    title={video.title}
-    className="h-full w-full"
-    allow="autoplay; encrypted-media; picture-in-picture"
-    allowFullScreen
-  />
-) : (
-  <div
-    data-ocid={`video.placeholder_state.${video.id}`}
-    className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
-  >
-    <Video
-      className="h-8 w-8 text-primary-foreground/80"
-      aria-hidden="true"
-    />
-    <p className="font-display text-base font-semibold text-primary-foreground">
-      Video coming soon
-    </p>
-    <p className="text-xs leading-relaxed text-primary-foreground/70">
-      Add a real video link in{" "}
-      <span className="font-mono">data/videos.ts</span> to play it here.
-    </p>
-  </div>
-)}  
+          <div className="h-full w-full bg-foreground/90">
+            {video.videoUrl ? (
+              isYouTube ? (
+                <iframe
+                  data-ocid={`video.player.${video.id}`}
+                  src={video.videoUrl}
+                  title={video.title}
+                  className="h-full w-full"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <video
+                  data-ocid={`video.player.${video.id}`}
+                  src={video.videoUrl}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="h-full w-full object-cover"
+                >
+                  <track kind="captions" />
+                </video>
+              )
+            ) : (
               <div
                 data-ocid={`video.placeholder_state.${video.id}`}
                 className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
@@ -69,7 +68,7 @@ export function VideoCard({
                   Video coming soon
                 </p>
                 <p className="text-xs leading-relaxed text-primary-foreground/70">
-                  Add a real video file in{" "}
+                  Add a real video link in{" "}
                   <span className="font-mono">data/videos.ts</span> to play it
                   here.
                 </p>
@@ -96,12 +95,10 @@ export function VideoCard({
               loading="lazy"
               className="h-full w-full object-cover transition-smooth group-hover:scale-105"
             />
-
             <div
               aria-hidden="true"
               className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/10 to-transparent"
             />
-
             <button
               type="button"
               data-ocid={`video.play_button.${video.id}`}
@@ -116,7 +113,6 @@ export function VideoCard({
                 />
               </span>
             </button>
-
             {video.isPlaceholder && (
               <Badge
                 variant="secondary"
