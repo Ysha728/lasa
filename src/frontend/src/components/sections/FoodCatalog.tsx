@@ -28,8 +28,12 @@ const FILTERS: { value: FilterValue; label: string }[] = [
 ];
 
 export function FoodCatalog() {
+  initialCategory = "all",
+}: {
+  initialCategory?: FoodCategory | "all";
+}) {
   // Which filter tab is active. "all" shows every dish.
-  const [filter, setFilter] = useState<FilterValue>("all");
+  const [filter, setFilter] = useState<FilterValue>(initialCategory);
   // The dish whose details modal is open, or null when it is closed.
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
 
