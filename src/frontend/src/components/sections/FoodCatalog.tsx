@@ -27,7 +27,7 @@ const FILTERS: { value: FilterValue; label: string }[] = [
   { value: "international", label: "International" },
 ];
 
-export function FoodCatalog() {
+export function FoodCatalog( {
   initialCategory = "all",
 }: {
   initialCategory?: FoodCategory | "all";
