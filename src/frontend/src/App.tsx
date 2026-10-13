@@ -11,6 +11,7 @@
  *   Flavor Passport → About Us → FAQ → Reviews → Comments →
  *   Suggestions Box → Contact Us → Follow Us
  */
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { AboutUs } from "@/components/sections/AboutUs";
 import { Comments } from "@/components/sections/Comments";
@@ -24,45 +25,77 @@ import { HomeSection } from "@/components/sections/HomeSection";
 import { Reviews } from "@/components/sections/Reviews";
 import { SuggestionsBox } from "@/components/sections/SuggestionsBox";
 
+const tabs = [
+  "Home",
+  "Local Flavors",
+  "International Flavors",
+  "Food Videos",
+  "Flavor Passport",
+  "About Us",
+  "FAQ",
+  "Reviews",
+  "Comments",
+  "Suggestions Box",
+  "Contact Us",
+  "Follow Us",
+] as const;
+
+type Tab = (typeof tabs)[number];
+
 export default function App() {
+  const [activeTab, setActiveTab] = useState<Tab>("Home");
+
   return (
     <Layout>
-      {/* 1. Home — hero, featured foods, and the "What is LASA" intro. */}
-      <HomeSection />
+      <nav
+        aria-label="Website sections"
+        className="sticky top-16 z-40 border-b border-border bg-background/95 p-2 backdrop-blur"
+      >
+        <div className="mx-auto flex max-w-6xl gap-2 overflow-x-auto">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => {
+                setActiveTab(tab);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              aria-current={activeTab === tab ? "page" : undefined}
+              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === tab
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card text-foreground hover:border-primary"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </nav>
 
-      {/*
-        2 & 3. Local Flavors + International Flavors.
-        FoodCatalog owns the All / Local / International filter and the shared
-        details modal, then renders both flavor sections beneath the controls.
-      */}
-      <FoodCatalog />
+      <main>
+        {activeTab === "Home" && <HomeSection />}
 
-      {/* 4. Food Videos — responsive video cards with placeholder clips. */}
-      <FoodVideos />
+        {(activeTab === "Local Flavors" ||
+          activeTab === "International Flavors") && (
+          <FoodCatalog
+            key={activeTab}
+            initialCategory={
+              activeTab === "Local Flavors" ? "local" : "international"
+            }
+          />
+        )}
 
-      {/* 5. Flavor Passport — collect a stamp for each explored dish. */}
-      <FlavorPassport />
-
-      {/* 6. About Us — the student project story and the LASA journey steps. */}
-      <AboutUs />
-
-      {/* 7. FAQ — expandable questions and answers. */}
-      <Faq />
-
-      {/* 8. Reviews & Ratings — star rating form plus the average summary. */}
-      <Reviews />
-
-      {/* 9. Comments — food-related comments and reactions. */}
-      <Comments />
-
-      {/* 10. Suggestions Box — suggest a food, topic, or improvement. */}
-      <SuggestionsBox />
-
-      {/* 11. Contact Us — contact details and a simple message form. */}
-      <ContactUs />
-
-      {/* 12. Follow Us — social buttons for the LASA food journey. */}
-      <FollowUs />
+        {activeTab === "Food Videos" && <FoodVideos />}
+        {activeTab === "Flavor Passport" && <FlavorPassport />}
+        {activeTab === "About Us" && <AboutUs />}
+        {activeTab === "FAQ" && <Faq />}
+        {activeTab === "Reviews" && <Reviews />}
+        {activeTab === "Comments" && <Comments />}
+        {activeTab === "Suggestions Box" && <SuggestionsBox />}
+        {activeTab === "Contact Us" && <ContactUs />}
+        {activeTab === "Follow Us" && <FollowUs />}
+      </main>
     </Layout>
   );
 }
