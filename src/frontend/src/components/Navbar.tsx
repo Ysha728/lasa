@@ -20,20 +20,20 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 glass">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         {/* Wordmark */}
         <a
           href="#home"
           data-ocid="nav.home_link"
           className="group flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <span className="grid size-9 place-items-center rounded-xl bg-gradient-primary font-display text-lg font-bold text-primary-foreground shadow-subtle transition-smooth group-hover:scale-105">
-            L
-          </span>
+          <span className="grid size-11 place-items-center rounded-xl bg-gradient-primary font-display text-xl font-bold text-primary-foreground shadow-subtle transition-smooth group-hover:scale-105">
+           L
+        </span>
           <span className="flex flex-col leading-none">
-            <span className="font-display text-xl font-bold tracking-tight text-foreground">
-              LASA
-            </span>
+            <span className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+           LASA
+        </span>
             <span className="hidden text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground sm:block">
               {TAGLINE}
             </span>
@@ -52,7 +52,7 @@ export function Navbar() {
               data-ocid={`nav.${section.id}_link`}
               aria-current={activeId === section.id ? "true" : undefined}
               className={cn(
-                "rounded-full px-3 py-2 text-sm font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+               "rounded-full px-3 py-2 text-base font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 activeId === section.id
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-secondary hover:text-foreground",
