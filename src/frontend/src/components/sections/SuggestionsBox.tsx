@@ -297,4 +297,4 @@ export function SuggestionsBox() {
       </div>
     </Section>
   );
-        }
+}
