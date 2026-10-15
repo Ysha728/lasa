@@ -1,119 +1,68 @@
-/**
- * Flavor Passport hook.
- * Tracks explored dishes and updates stamps immediately.
- */
 
-import { createActor } from "@/backend";
 import { TOTAL_FOODS } from "@/data/foods";
-import { listExplored, markExplored } from "@/lib/backend";
-import { useActor } from "@caffeineai/core-infrastructure";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-const EXPLORED_KEY = ["explored"] as const;
+const STORAGE_KEY = "lasa-explored-foods";
+
+function loadExplored(): number[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return [];
+    const parsed: unknown = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (id): id is number =>
+        typeof id === "number" &&
+        Number.isInteger(id) &&
+        id >= 1 &&
+        id <= TOTAL_FOODS,
+    );
+  } catch {
+    return [];
+  }
+}
 
 export function usePassport() {
-  const { actor, isFetching } = useActor(createActor);
-  const queryClient = useQueryClient();
+  const [exploredIds, setExploredIds] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const query = useQuery({
-    queryKey: EXPLORED_KEY,
-    queryFn: async () => {
-      if (!actor) return [] as number[];
-      return listExplored(actor);
-    },
-    enabled: !!actor && !isFetching,
-  });
+  useEffect(() => {
+    setExploredIds(loadExplored());
+    setIsLoading(false);
+  }, []);
 
-  const exploredIds = useMemo(
-    () => new Set(query.data ?? []),
-    [query.data],
-  );
+  const markVisited = useCallback((foodId: number) => {
+    if (
+      !Number.isInteger(foodId) ||
+      foodId < 1 ||
+      foodId > TOTAL_FOODS
+    ) {
+      return;
+    }
 
-  const mutation = useMutation({
-    mutationFn: async (foodId: number) => {
-      if (!actor) {
-        throw new Error("Backend is not ready.");
-      }
-      const result = await markExplored(actor, foodId);
+    setExploredIds((previous) => {
+      if (previous.includes(foodId)) return previous;
 
-      if (result === false) {
-        throw new Error("The backend did not save this stamp.");
-      }
+      const updated = [...previous, foodId];
 
-      return foodId;
-    },
-
-    onMutate: async (foodId: number) => {
-      await queryClient.cancelQueries({ queryKey: EXPLORED_KEY });
-
-      const previousIds =
-        queryClient.getQueryData<number[]>(EXPLORED_KEY) ?? [];
-
-      queryClient.setQueryData<number[]>(
-        EXPLORED_KEY,
-        previousIds.includes(foodId)
-          ? previousIds
-          : [...previousIds, foodId],
-      );
-
-      return { previousIds };
-    },
-
-    onError: (error, _foodId, context) => {
-      if (context) {
-        queryClient.setQueryData(
-          EXPLORED_KEY,
-          context.previousIds,
-        );
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } catch (error) {
+        console.error("Could not save Flavor Passport:", error);
+        window.alert("Could not save your stamp. Please check browser storage.");
+        return previous;
       }
 
-      console.error("Flavor Passport error:", error);
+      return updated;
+    });
+  }, []);
 
-      window.alert(
-        `Stamp failed: ${
-          error instanceof Error ? error.message : String(error)
-        }`,
-      );
-    },
-
-    onSettled: () => {
-      void queryClient.invalidateQueries({
-        queryKey: EXPLORED_KEY,
-      });
-    },
-  });
-
-  const markVisited = useCallback(
-    (foodId: number) => {
-      window.alert(
-        `Stamp tapped! Food ID: ${foodId}\n` +
-          `Backend ready: ${!!actor && !isFetching}`,
-      );
-
-      if (exploredIds.has(foodId) || mutation.isPending) return;
-
-      if (!actor || isFetching) {
-        window.alert(
-          "The backend is still connecting. Please try again.",
-        );
-        return;
-      }
-
-      mutation.mutate(foodId);
-    },
-    [exploredIds, mutation, actor, isFetching],
-  );
-
-  const collected = exploredIds.size;
+  const exploredSet = new Set(exploredIds);
+  const collected = exploredIds.length;
 
   return {
-    exploredIds,
-    isExplored: (foodId: number) => exploredIds.has(foodId),
+    exploredIds: exploredSet,
+    isExplored: (foodId: number) => exploredSet.has(foodId),
     markVisited,
     collected,
     total: TOTAL_FOODS,
@@ -121,6 +70,6 @@ export function usePassport() {
       TOTAL_FOODS === 0
         ? 0
         : Math.round((collected / TOTAL_FOODS) * 100),
-    isLoading: query.isLoading || isFetching,
+    isLoading,
   };
 }
