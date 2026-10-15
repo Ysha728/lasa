@@ -1,14 +1,4 @@
-/**
- * SuggestionsBox — the "Suggest a Food" form.
- *
- * Visitors can suggest a Filipino food, an international food, a topic, or a
- * website improvement. Name is optional; the suggestion text and category are
- * required. On success we show a clear confirmation that the suggestion was
- * received, and the latest suggestions are listed below.
- *
- * Backend wiring: `submitSuggestion` writes and `listSuggestions` reads.
- */
-import { createActor } from "@/backend";
+
 import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,102 +11,113 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { formatTimestamp } from "@/lib/backend";
-// SuggestionCategory is a Motoko variant exported as a runtime enum value.
-import { SuggestionCategory } from "@/types/lasa";
-import { useActor } from "@caffeineai/core-infrastructure";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
   CheckCircle2,
   Lightbulb,
-  Loader2,
   Send,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-/** Human-readable labels for each suggestion category. */
-const CATEGORY_OPTIONS: { value: SuggestionCategory; label: string }[] = [
-  { value: SuggestionCategory.filipinoFood, label: "Filipino food" },
-  { value: SuggestionCategory.internationalFood, label: "International food" },
-  { value: SuggestionCategory.topic, label: "Topic" },
-  {
-    value: SuggestionCategory.websiteImprovement,
-    label: "Website improvement",
-  },
+type SuggestionCategory =
+  | "filipinoFood"
+  | "internationalFood"
+  | "topic"
+  | "websiteImprovement";
+
+type LocalSuggestion = {
+  id: string;
+  name: string;
+  text: string;
+  category: SuggestionCategory;
+  createdAt: number;
+};
+
+const STORAGE_KEY = "lasa-suggestions";
+
+const CATEGORY_OPTIONS: {
+  value: SuggestionCategory;
+  label: string;
+}[] = [
+  { value: "filipinoFood", label: "Filipino food" },
+  { value: "internationalFood", label: "International food" },
+  { value: "topic", label: "Topic" },
+  { value: "websiteImprovement", label: "Website improvement" },
 ];
 
-/** Read every submitted suggestion, newest first. */
-function useSuggestions() {
-  const { actor, isFetching } = useActor(createActor);
-  return useQuery({
-    queryKey: ["suggestions"],
-    queryFn: async () => {
-      if (!actor) return [];
-      return actor.listSuggestions();
-    },
-    enabled: !!actor && !isFetching,
-  });
-}
+function loadSuggestions(): LocalSuggestion[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return [];
 
-/** Submit a new suggestion and refresh the list on success. */
-function useSubmitSuggestion() {
-  const { actor } = useActor(createActor);
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (input: {
-      name: string;
-      text: string;
-      category: SuggestionCategory;
-    }) => {
-      if (!actor) throw new Error("Backend is not ready");
-      return actor.submitSuggestion({
-        // `name` is an optional Motoko value: omit the key when empty.
-        name: input.name.trim().length > 0 ? input.name.trim() : undefined,
-        text: input.text.trim(),
-        category: input.category,
-      });
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["suggestions"] });
-    },
-  });
+    const parsed: unknown = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter(
+      (item): item is LocalSuggestion =>
+        item !== null &&
+        typeof item === "object" &&
+        typeof item.id === "string" &&
+        typeof item.name === "string" &&
+        typeof item.text === "string" &&
+        typeof item.category === "string" &&
+        CATEGORY_OPTIONS.some(
+          (option) => option.value === item.category,
+        ) &&
+        typeof item.createdAt === "number",
+    );
+  } catch {
+    return [];
+  }
 }
 
 export function SuggestionsBox() {
-  const suggestionsQuery = useSuggestions();
-  const submitSuggestion = useSubmitSuggestion();
-
-  // Form draft state — owned locally, never derived from query data.
+  const [suggestions, setSuggestions] = useState<LocalSuggestion[]>([]);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
-  const [category, setCategory] = useState<SuggestionCategory>(
-    SuggestionCategory.filipinoFood,
-  );
+  const [category, setCategory] =
+    useState<SuggestionCategory>("filipinoFood");
   const [formError, setFormError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const suggestions = suggestionsQuery.data ?? [];
+  useEffect(() => {
+    setSuggestions(loadSuggestions());
+  }, []);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
     setFormError(null);
+    setSuccess(false);
 
-    if (text.trim().length === 0) {
+    if (!text.trim()) {
       setFormError("Please tell us what you'd like to suggest.");
       return;
     }
 
-    // Capture the draft, clear it immediately, restore only if the save fails.
-    const draft = { name, text, category };
-    setName("");
-    setText("");
+    const newSuggestion: LocalSuggestion = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+      name: name.trim(),
+      text: text.trim(),
+      category,
+      createdAt: Date.now(),
+    };
 
-    submitSuggestion.mutate(draft, {
-      onError: () => {
-        setName((current) => (current === "" ? draft.name : current));
-        setText((current) => (current === "" ? draft.text : current));
-      },
-    });
+    const updated = [newSuggestion, ...suggestions];
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      setSuggestions(updated);
+      setName("");
+      setText("");
+      setCategory("filipinoFood");
+      setSuccess(true);
+    } catch {
+      setFormError(
+        "We couldn't save your suggestion. Please check your browser storage.",
+      );
+    }
   };
 
   return (
@@ -139,7 +140,6 @@ export function SuggestionsBox() {
           </p>
         </header>
 
-        {/* Suggestion form */}
         <form
           onSubmit={handleSubmit}
           data-ocid="suggestion.form"
@@ -180,7 +180,10 @@ export function SuggestionsBox() {
                 </SelectTrigger>
                 <SelectContent>
                   {CATEGORY_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
+                    <SelectItem
+                      key={option.value}
+                      value={option.value}
+                    >
                       {option.label}
                     </SelectItem>
                   ))}
@@ -196,95 +199,53 @@ export function SuggestionsBox() {
               data-ocid="suggestion.textarea"
               value={text}
               onChange={(event) => setText(event.target.value)}
-              placeholder="Tell us the dish, topic, or improvement you have in mind…"
+              placeholder="Suggest a dish, topic, or website improvement…"
               rows={4}
               maxLength={500}
             />
           </div>
 
-          {formError ? (
+          {formError && (
             <p
               data-ocid="suggestion.error_state"
               className="mt-4 flex items-center gap-2 text-sm text-destructive"
             >
-              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <AlertCircle className="h-4 w-4 shrink-0" />
               {formError}
             </p>
-          ) : null}
+          )}
 
-          {submitSuggestion.isError ? (
-            <p
-              data-ocid="suggestion.submit_error_state"
-              className="mt-4 flex items-center gap-2 text-sm text-destructive"
-            >
-              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-              We couldn&apos;t send your suggestion. Please try again.
-            </p>
-          ) : null}
-
-          {submitSuggestion.isSuccess ? (
+          {success && (
             <p
               data-ocid="suggestion.success_state"
               className="mt-4 flex items-center gap-2 text-sm text-success"
             >
-              <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
-              Salamat! Your suggestion was received.
+              <CheckCircle2 className="h-4 w-4 shrink-0" />
+              Salamat! Your suggestion has been saved.
             </p>
-          ) : null}
+          )}
 
           <Button
             type="submit"
             data-ocid="suggestion.submit_button"
-            disabled={submitSuggestion.isPending}
             className="mt-5 w-full rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90 sm:w-auto"
           >
-            {submitSuggestion.isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <Send className="h-4 w-4" aria-hidden="true" />
-            )}
-            {submitSuggestion.isPending ? "Sending…" : "Submit suggestion"}
+            <Send className="h-4 w-4" />
+            Submit suggestion
           </Button>
         </form>
 
-        {/* Recent suggestions */}
         <div className="mt-10">
           <h3 className="font-display text-xl font-semibold text-foreground">
             Recent suggestions
           </h3>
 
-          {suggestionsQuery.isLoading ? (
-            <div
-              data-ocid="suggestion.loading_state"
-              className="mt-4 flex flex-col gap-3"
-            >
-              {Array.from(
-                { length: 3 },
-                (_, i) => `suggestion-skeleton-${i}`,
-              ).map((id) => (
-                <div
-                  key={id}
-                  className="h-20 animate-pulse rounded-[var(--radius)] border border-border bg-muted"
-                />
-              ))}
-            </div>
-          ) : suggestionsQuery.isError ? (
-            <div
-              data-ocid="suggestion.list_error_state"
-              className="mt-4 rounded-[var(--radius)] border border-destructive/30 bg-destructive/5 p-6 text-sm text-destructive"
-            >
-              We couldn&apos;t load the suggestions right now. Please refresh
-              the page to try again.
-            </div>
-          ) : suggestions.length === 0 ? (
+          {suggestions.length === 0 ? (
             <div
               data-ocid="suggestion.empty_state"
               className="mt-4 rounded-[var(--radius)] border border-dashed border-border bg-card p-8 text-center"
             >
-              <Lightbulb
-                className="mx-auto h-8 w-8 text-primary/60"
-                aria-hidden="true"
-              />
+              <Lightbulb className="mx-auto h-8 w-8 text-primary/60" />
               <p className="mt-3 font-display text-lg font-semibold text-card-foreground">
                 No suggestions yet
               </p>
@@ -302,10 +263,11 @@ export function SuggestionsBox() {
                   CATEGORY_OPTIONS.find(
                     (option) => option.value === suggestion.category,
                   )?.label ?? "Suggestion";
+
                 return (
                   <li
-                    key={suggestion.id.toString()}
-                    data-ocid={`suggestion.item.${suggestion.id}`}
+                    key={suggestion.id}
+                    data-ocid="suggestion.item"
                     className="rounded-[var(--radius)] border border-border bg-card p-5 shadow-subtle transition-smooth hover:shadow-elevated"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -313,17 +275,19 @@ export function SuggestionsBox() {
                         {label}
                       </span>
                       <time className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-                        {formatTimestamp(suggestion.createdAt)}
+                        {new Date(suggestion.createdAt).toLocaleString()}
                       </time>
                     </div>
+
                     <p className="mt-3 text-sm leading-relaxed text-card-foreground">
                       {suggestion.text}
                     </p>
-                    {suggestion.name ? (
+
+                    {suggestion.name && (
                       <p className="mt-2 font-display text-sm font-semibold text-muted-foreground">
                         — {suggestion.name}
                       </p>
-                    ) : null}
+                    )}
                   </li>
                 );
               })}
@@ -333,4 +297,4 @@ export function SuggestionsBox() {
       </div>
     </Section>
   );
-}
+        }
