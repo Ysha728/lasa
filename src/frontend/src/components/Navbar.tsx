@@ -18,17 +18,15 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 glass">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        {/* LASA Logo */}
         <a
           href="#home"
-          data-ocid="nav.home_link"
           onClick={closeMenu}
+          data-ocid="nav.home_link"
           className="group flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <span className="grid size-11 place-items-center rounded-xl bg-gradient-primary font-display text-xl font-bold text-primary-foreground shadow-subtle transition-smooth group-hover:scale-105">
             L
           </span>
-
           <span className="flex flex-col leading-none">
             <span className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               LASA
@@ -39,24 +37,18 @@ export function Navbar() {
           </span>
         </a>
 
-        {/* Desktop Navigation */}
-        <nav
-          aria-label="Primary"
-          className="hidden items-center gap-0.5 lg:flex"
-        >
+        <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
           {SECTIONS.map((section) => (
             <a
               key={section.id}
               href={`#${section.id}`}
               data-ocid={`nav.${section.id}_link`}
-              aria-current={
-                activeId === section.id ? "location" : undefined
-              }
+              aria-current={activeId === section.id ? "page" : undefined}
               className={cn(
                 "rounded-full px-3 py-2 text-base font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 activeId === section.id
                   ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
               )}
             >
               {section.shortLabel}
@@ -64,10 +56,8 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Header Controls */}
         <div className="flex items-center gap-2">
           <MusicToggle />
-
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
@@ -82,15 +72,13 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
       <div
         className={cn(
           "fixed inset-0 z-[60] lg:hidden",
-          menuOpen ? "pointer-events-auto" : "pointer-events-none",
+          menuOpen ? "pointer-events-auto" : "pointer-events-none"
         )}
         aria-hidden={!menuOpen}
       >
-        {/* Backdrop */}
         <button
           type="button"
           tabIndex={menuOpen ? 0 : -1}
@@ -98,41 +86,36 @@ export function Navbar() {
           onClick={closeMenu}
           className={cn(
             "absolute inset-0 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300",
-            menuOpen ? "opacity-100" : "opacity-0",
+            menuOpen ? "opacity-100" : "opacity-0"
           )}
         />
 
-        {/* Drawer Panel */}
         <aside
           id="mobile-navigation"
           data-ocid="nav.mobile_panel"
-          aria-label="Mobile navigation panel"
           className={cn(
-            "absolute right-0 top-0 flex h-full w-[82%] max-w-xs flex-col overflow-hidden bg-card shadow-elevated transition-transform duration-300 ease-out",
-            menuOpen ? "translate-x-0" : "translate-x-full",
+            "absolute right-0 top-0 flex h-full w-[82%] max-w-xs flex-col overflow-hidden bg-white text-black shadow-elevated transition-transform duration-300 ease-out",
+            menuOpen ? "translate-x-0" : "translate-x-full"
           )}
         >
-          {/* Drawer Header */}
-          <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-4">
-            <span className="font-display text-lg font-bold text-foreground">
+          <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-5 py-4">
+            <span className="font-display text-lg font-bold text-black">
               Menu
             </span>
-
             <button
               type="button"
               onClick={closeMenu}
               aria-label="Close navigation menu"
               data-ocid="nav.close_button"
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-foreground transition-smooth hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="inline-flex size-9 items-center justify-center rounded-full border border-gray-300 text-black transition-smooth hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <X className="size-5" aria-hidden="true" />
             </button>
           </div>
 
-          {/* Navigation Links */}
           <nav
             aria-label="Mobile"
-            className="relative z-10 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto bg-card p-4"
+            className="relative z-10 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto bg-white p-4"
           >
             {SECTIONS.map((section) => (
               <a
@@ -140,14 +123,12 @@ export function Navbar() {
                 href={`#${section.id}`}
                 onClick={closeMenu}
                 data-ocid={`nav.mobile.${section.id}_link`}
-                aria-current={
-                  activeId === section.id ? "location" : undefined
-                }
+                aria-current={activeId === section.id ? "page" : undefined}
                 className={cn(
-                  "block shrink-0 rounded-xl px-4 py-3 text-base font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "block shrink-0 rounded-xl border border-gray-200 px-4 py-3 text-base font-medium text-black transition-smooth hover:bg-yellow-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   activeId === section.id
-                    ? "bg-primary/10 text-primary"
-                    : "text-foreground hover:bg-secondary",
+                    ? "bg-yellow-200 text-black"
+                    : "bg-white text-black"
                 )}
               >
                 {section.label}
@@ -158,4 +139,4 @@ export function Navbar() {
       </div>
     </header>
   );
-      }
+}
