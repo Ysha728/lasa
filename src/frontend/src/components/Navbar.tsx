@@ -119,12 +119,10 @@ export function Navbar() {
             >
               <X className="size-5" aria-hidden="true" />
             </button>
-          </div>
-          <nav
-            aria-label="Mobile"
-            className="flex flex-col gap-1 overflow-y-auto p-4"
+          </div
+          className="relative z-10 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto bg-card p-4"
           >
-            {SECTIONS.map((section) => (
+          {SECTIONS.map((section) => (
               <a
                 key={section.id}
                 href={`#${section.id}`}
