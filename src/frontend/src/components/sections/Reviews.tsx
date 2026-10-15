@@ -1,16 +1,4 @@
-/**
- * Reviews — the "Reviews & Ratings" community section.
- *
- * Visitors pick a dish, choose 1–5 stars, write a short review, and submit.
- * Submitted reviews render as cards, and the average rating is shown
- * prominently with the message "Share your LASA experience!".
- *
- * Backend wiring: `submitReview` writes, `listReviews` reads the cards, and
- * `getReviewStats` supplies the average + count. All three go through React
- * Query so the UI stays in sync and never crashes if a call fails.
- */
-import { createActor } from "@/backend";
-import { ReviewCard } from "@/components/ReviewCard";
+
 import { Section } from "@/components/Section";
 import { StarRating } from "@/components/StarRating";
 import { Button } from "@/components/ui/button";
@@ -25,126 +13,121 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { FOODS } from "@/data/foods";
-import { useActor } from "@caffeineai/core-infrastructure";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertCircle, Loader2, MessageSquareHeart, Send } from "lucide-react";
-import { useState } from "react";
+import {
+  AlertCircle,
+  MessageSquareHeart,
+  Send,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
-/** Read every submitted review, newest first. */
-function useReviews() {
-  const { actor, isFetching } = useActor(createActor);
-  return useQuery({
-    queryKey: ["reviews"],
-    queryFn: async () => {
-      if (!actor) return [];
-      return actor.listReviews();
-    },
-    enabled: !!actor && !isFetching,
-  });
-}
+type LocalReview = {
+  id: string;
+  foodId: number;
+  reviewerName: string;
+  rating: number;
+  text: string;
+  createdAt: number;
+};
 
-/** Average rating + review count for one dish. */
-function useReviewStats(foodId: number) {
-  const { actor, isFetching } = useActor(createActor);
-  return useQuery({
-    queryKey: ["reviewStats", foodId],
-    queryFn: async () => {
-      if (!actor) return null;
-      return actor.getReviewStats(BigInt(foodId));
-    },
-    enabled: !!actor && !isFetching,
-  });
-}
+const STORAGE_KEY = "lasa-reviews";
 
-/** Submit a new review and refresh the list + stats on success. */
-function useSubmitReview() {
-  const { actor } = useActor(createActor);
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (input: {
-      foodId: number;
-      reviewerName: string;
-      rating: number;
-      text: string;
-    }) => {
-      if (!actor) throw new Error("Backend is not ready");
-      return actor.submitReview({
-        foodId: BigInt(input.foodId),
-        reviewerName: input.reviewerName,
-        rating: BigInt(input.rating),
-        text: input.text,
-      });
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["reviews"] });
-      void queryClient.invalidateQueries({ queryKey: ["reviewStats"] });
-    },
-  });
+function loadReviews(): LocalReview[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return [];
+
+    const parsed: unknown = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter(
+      (item): item is LocalReview =>
+        item !== null &&
+        typeof item === "object" &&
+        typeof item.id === "string" &&
+        typeof item.foodId === "number" &&
+        typeof item.reviewerName === "string" &&
+        typeof item.rating === "number" &&
+        item.rating >= 1 &&
+        item.rating <= 5 &&
+        typeof item.text === "string" &&
+        typeof item.createdAt === "number",
+    );
+  } catch {
+    return [];
+  }
 }
 
 export function Reviews() {
-  const reviewsQuery = useReviews();
-  const submitReview = useSubmitReview();
-
-  // Form draft state — owned locally, never derived from query data.
+  const [reviews, setReviews] = useState<LocalReview[]>([]);
   const [foodId, setFoodId] = useState<number>(FOODS[0]?.id ?? 1);
   const [rating, setRating] = useState(0);
   const [reviewerName, setReviewerName] = useState("");
   const [text, setText] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  // The average shown in the summary follows the currently selected dish.
-  const statsQuery = useReviewStats(foodId);
-  const stats = statsQuery.data;
-  const average = stats ? stats.average : 0;
-  const count = stats ? Number(stats.count) : 0;
+  useEffect(() => {
+    setReviews(loadReviews());
+  }, []);
 
-  const reviews = reviewsQuery.data ?? [];
+  const dishReviews = reviews.filter(
+    (review) => review.foodId === foodId,
+  );
+
+  const average =
+    dishReviews.length > 0
+      ? dishReviews.reduce((sum, review) => sum + review.rating, 0) /
+        dishReviews.length
+      : 0;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormError(null);
+    setSuccess(false);
 
-    // Simple, friendly validation before we hit the backend.
-    if (rating < 1) {
+    if (rating < 1 || rating > 5) {
       setFormError("Please pick a star rating first.");
       return;
     }
-    if (reviewerName.trim().length === 0) {
+
+    if (!reviewerName.trim()) {
       setFormError("Please add your name so we know who to thank.");
       return;
     }
-    if (text.trim().length === 0) {
+
+    if (!text.trim()) {
       setFormError("Please write a short review.");
       return;
     }
 
-    // Capture the draft, clear it immediately, and restore it only on error.
-    const draft = {
+    const newReview: LocalReview = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       foodId,
       reviewerName: reviewerName.trim(),
       rating,
       text: text.trim(),
+      createdAt: Date.now(),
     };
-    setReviewerName("");
-    setText("");
-    setRating(0);
 
-    submitReview.mutate(draft, {
-      onError: () => {
-        setReviewerName((current) =>
-          current === "" ? draft.reviewerName : current,
-        );
-        setText((current) => (current === "" ? draft.text : current));
-        setRating((current) => (current === 0 ? draft.rating : current));
-      },
-    });
+    const updated = [newReview, ...reviews];
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      setReviews(updated);
+      setReviewerName("");
+      setText("");
+      setRating(0);
+      setSuccess(true);
+    } catch {
+      setFormError(
+        "We couldn't save your review. Please check your browser storage.",
+      );
+    }
   };
 
   return (
     <Section id="reviews" label="Reviews" className="bg-gradient-subtle">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Section heading */}
         <header className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
             Community
@@ -153,15 +136,13 @@ export function Reviews() {
             Reviews &amp; Ratings
           </h2>
           <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-            Share your LASA experience! Rate a dish, tell us what you loved, and
-            help the next hungry visitor decide.
+            Share your LASA experience! Rate a dish, tell us what you loved,
+            and help the next hungry visitor decide.
           </p>
         </header>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-          {/* Left column: the review form + average summary. */}
           <div className="flex flex-col gap-6">
-            {/* Average rating summary card */}
             <div
               data-ocid="review.stats_panel"
               className="rounded-[var(--radius)] border border-border bg-card p-6 shadow-subtle"
@@ -181,16 +162,15 @@ export function Reviews() {
                 <StarRating value={Math.round(average)} readOnly size={20} />
               </div>
               <p className="mt-3 text-sm text-muted-foreground">
-                {count === 0
+                {dishReviews.length === 0
                   ? "No reviews for this dish yet — be the first!"
-                  : `Based on ${count} review${count === 1 ? "" : "s"}.`}
+                  : `Based on ${dishReviews.length} review${dishReviews.length === 1 ? "" : "s"}.`}
               </p>
               <p className="mt-4 font-display text-lg font-semibold text-primary">
                 Share your LASA experience!
               </p>
             </div>
 
-            {/* Review form */}
             <form
               onSubmit={handleSubmit}
               data-ocid="review.form"
@@ -201,7 +181,6 @@ export function Reviews() {
               </h3>
 
               <div className="mt-5 flex flex-col gap-5">
-                {/* Dish picker */}
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="review-food">Which dish?</Label>
                   <Select
@@ -225,7 +204,6 @@ export function Reviews() {
                   </Select>
                 </div>
 
-                {/* Star rating */}
                 <div className="flex flex-col gap-2">
                   <Label>Your rating</Label>
                   <StarRating
@@ -235,7 +213,6 @@ export function Reviews() {
                   />
                 </div>
 
-                {/* Reviewer name */}
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="review-name">Your name</Label>
                   <Input
@@ -248,7 +225,6 @@ export function Reviews() {
                   />
                 </div>
 
-                {/* Review text */}
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="review-text">Your review</Label>
                   <Textarea
@@ -262,8 +238,7 @@ export function Reviews() {
                   />
                 </div>
 
-                {/* Inline validation / error message */}
-                {formError ? (
+                {formError && (
                   <p
                     data-ocid="review.error_state"
                     className="flex items-center gap-2 text-sm text-destructive"
@@ -274,22 +249,9 @@ export function Reviews() {
                     />
                     {formError}
                   </p>
-                ) : null}
+                )}
 
-                {submitReview.isError ? (
-                  <p
-                    data-ocid="review.submit_error_state"
-                    className="flex items-center gap-2 text-sm text-destructive"
-                  >
-                    <AlertCircle
-                      className="h-4 w-4 shrink-0"
-                      aria-hidden="true"
-                    />
-                    We couldn&apos;t save your review. Please try again.
-                  </p>
-                ) : null}
-
-                {submitReview.isSuccess ? (
+                {success && (
                   <p
                     data-ocid="review.success_state"
                     className="flex items-center gap-2 text-sm text-success"
@@ -298,60 +260,28 @@ export function Reviews() {
                       className="h-4 w-4 shrink-0"
                       aria-hidden="true"
                     />
-                    Salamat! Your review is now live.
+                    Salamat! Your review has been saved.
                   </p>
-                ) : null}
+                )}
 
                 <Button
                   type="submit"
                   data-ocid="review.submit_button"
-                  disabled={submitReview.isPending}
                   className="w-full rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
                 >
-                  {submitReview.isPending ? (
-                    <Loader2
-                      className="h-4 w-4 animate-spin"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <Send className="h-4 w-4" aria-hidden="true" />
-                  )}
-                  {submitReview.isPending ? "Submitting…" : "Submit review"}
+                  <Send className="h-4 w-4" aria-hidden="true" />
+                  Submit review
                 </Button>
               </div>
             </form>
           </div>
 
-          {/* Right column: the submitted review cards. */}
           <div className="flex flex-col gap-4">
             <h3 className="font-display text-xl font-semibold text-foreground">
               What people are saying
             </h3>
 
-            {reviewsQuery.isLoading ? (
-              <div
-                data-ocid="review.loading_state"
-                className="grid gap-4 sm:grid-cols-2"
-              >
-                {Array.from(
-                  { length: 4 },
-                  (_, i) => `review-skeleton-${i}`,
-                ).map((id) => (
-                  <div
-                    key={id}
-                    className="h-40 animate-pulse rounded-[var(--radius)] border border-border bg-muted"
-                  />
-                ))}
-              </div>
-            ) : reviewsQuery.isError ? (
-              <div
-                data-ocid="review.list_error_state"
-                className="rounded-[var(--radius)] border border-destructive/30 bg-destructive/5 p-6 text-sm text-destructive"
-              >
-                We couldn&apos;t load the reviews right now. Please refresh the
-                page to try again.
-              </div>
-            ) : reviews.length === 0 ? (
+            {reviews.length === 0 ? (
               <div
                 data-ocid="review.empty_state"
                 className="rounded-[var(--radius)] border border-dashed border-border bg-card p-8 text-center"
@@ -369,9 +299,39 @@ export function Reviews() {
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
-                {reviews.map((review) => (
-                  <ReviewCard key={review.id.toString()} review={review} />
-                ))}
+                {reviews.map((review) => {
+                  const food = FOODS.find((item) => item.id === review.foodId);
+
+                  return (
+                    <article
+                      key={review.id}
+                      data-ocid="review.card"
+                      className="group relative flex h-full flex-col gap-3 overflow-hidden rounded-[var(--radius)] border border-border bg-card p-5 shadow-subtle transition-smooth hover:-translate-y-1 hover:shadow-elevated"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <StarRating value={review.rating} readOnly size={16} />
+                        {food && (
+                          <span className="shrink-0 rounded-full bg-secondary px-2.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-secondary-foreground">
+                            {food.emoji} {food.name}
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="flex-1 text-sm leading-relaxed text-card-foreground">
+                        {review.text}
+                      </p>
+
+                      <footer className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3">
+                        <span className="truncate font-display text-sm font-semibold text-card-foreground">
+                          {review.reviewerName}
+                        </span>
+                        <time className="shrink-0 font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </time>
+                      </footer>
+                    </article>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -379,4 +339,5 @@ export function Reviews() {
       </div>
     </Section>
   );
-}
+    }
+            
