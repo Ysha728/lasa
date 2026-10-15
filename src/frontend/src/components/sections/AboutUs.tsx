@@ -1,10 +1,6 @@
+
 /**
- * AboutUs — tells visitors what LASA is and how to use it.
- *
- * The section has two parts:
- *  1. A short story about the student project and why it exists.
- *  2. The "journey" steps (discover → watch → read → rate → comment →
- *     suggest → follow) shown as a numbered card grid.
+ * AboutUs — introduces LASA, its creators, and the visitor journey.
  */
 import { Section } from "@/components/Section";
 import {
@@ -14,22 +10,25 @@ import {
   MessageCircle,
   Play,
   Star,
+  Users,
+  Crown,
 } from "lucide-react";
 
-/** One step in the LASA journey, rendered as a numbered card. */
 interface JourneyStep {
-  /** Emoji marker keeps the cards playful and easy to scan. */
   emoji: string;
   title: string;
   description: string;
-  /** Lucide icon shown in the card corner. */
   Icon: typeof Compass;
 }
 
-/**
- * The seven-step journey. Defined as data so the grid stays tidy and each step
- * is easy to edit in one place.
- */
+const TEAM_MEMBERS = [
+  { name: "Trisha Mae Rañosa", role: "Team Leader", leader: true },
+  { name: "Ralph Martin Bentillo", role: "Team Member", leader: false },
+  { name: "Nathaniel Agpoon", role: "Team Member", leader: false },
+  { name: "Giordani Alvarado", role: "Team Member", leader: false },
+  { name: "James Arguelles", role: "Team Member", leader: false },
+];
+
 const JOURNEY_STEPS: JourneyStep[] = [
   {
     emoji: "🔍",
@@ -63,14 +62,14 @@ const JOURNEY_STEPS: JourneyStep[] = [
     emoji: "💬",
     title: "Comment",
     description:
-      "Share your own take, tips, or memories in the reviews section.",
+      "Share your own take, tips, or memories in our community sections.",
     Icon: MessageCircle,
   },
   {
     emoji: "💡",
     title: "Suggest",
     description:
-      "Recommend a dish we are missing and help the menu grow with the community.",
+      "Recommend a dish we are missing and help our food collection grow.",
     Icon: Heart,
   },
   {
@@ -86,7 +85,6 @@ export function AboutUs() {
   return (
     <Section id="about" label="About Us" className="bg-secondary/40">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Heading block */}
         <div className="mx-auto max-w-3xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
             About Us
@@ -102,16 +100,70 @@ export function AboutUs() {
             dishes we are still discovering.
           </p>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Every recipe here was researched, written, and photographed by
-            students. Our goal is to make food culture feel welcoming and fun,
-            and to give everyone a place to share what they taste.
+            Our goal is to make food culture welcoming and fun, and to give
+            everyone a place to discover dishes and share what they taste.
           </p>
         </div>
 
+        {/* Meet the creators */}
+        <div className="mt-16">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+              The People Behind LASA
+            </p>
+            <h3 className="mt-3 font-display text-3xl font-bold text-foreground sm:text-4xl">
+              Meet Our Creators
+            </h3>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              We are the student team behind LASA: A Journey Through Local and
+              Global Flavors. Together, we created this website to celebrate
+              Filipino cuisine and explore delicious dishes from around the
+              world.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {TEAM_MEMBERS.map((member, index) => (
+              <div
+                key={member.name}
+                data-ocid={`about.creator.${index + 1}`}
+                className={`relative flex flex-col items-center rounded-[var(--radius)] border p-6 text-center shadow-subtle transition-smooth hover:-translate-y-1 hover:shadow-elevated ${
+                  member.leader
+                    ? "border-primary/50 bg-primary/10 sm:col-span-2 lg:col-span-1"
+                    : "border-border bg-card"
+                }`}
+              >
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  {member.leader ? (
+                    <Crown className="h-8 w-8" aria-hidden="true" />
+                  ) : (
+                    <Users className="h-8 w-8" aria-hidden="true" />
+                  )}
+                </div>
+
+                <h4 className="mt-4 font-display text-lg font-semibold text-foreground">
+                  {member.name}
+                </h4>
+
+                <span
+                  className={`mt-2 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
+                    member.leader
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground"
+                  }`}
+                >
+                  {member.leader && <Crown className="h-3 w-3" />}
+                  {member.role}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Journey steps */}
-        <div className="mt-14">
+        <div className="mt-16">
           <h3 className="text-center font-display text-2xl font-semibold text-foreground sm:text-3xl">
-            Your LASA journey
+            Your LASA Journey
           </h3>
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-muted-foreground sm:text-base">
             Seven simple steps take you from curious visitor to part of the
@@ -125,7 +177,6 @@ export function AboutUs() {
                 data-ocid={`about.step.${index + 1}`}
                 className="group relative flex flex-col rounded-[var(--radius)] border border-border bg-card p-6 shadow-subtle transition-smooth hover:-translate-y-1 hover:shadow-elevated"
               >
-                {/* Step number badge */}
                 <span className="absolute right-5 top-5 font-mono text-xs font-semibold text-muted-foreground">
                   {String(index + 1).padStart(2, "0")}
                 </span>
