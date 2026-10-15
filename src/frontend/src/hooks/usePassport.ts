@@ -1,9 +1,6 @@
 /**
  * Flavor Passport hook.
- *
- * The passport tracks which dishes the visitor has explored. Explored ids are
- * stored on the backend (per caller) and mirrored locally so the passport
- * stamps update immediately.
+ * Tracks explored dishes and updates stamps immediately.
  */
 
 import { createActor } from "@/backend";
@@ -40,9 +37,15 @@ export function usePassport() {
   const mutation = useMutation({
     mutationFn: async (foodId: number) => {
       if (!actor) {
-        throw new Error("Backend is not ready. Please try again.");
+        throw new Error("Backend is not ready.");
       }
-      return markExplored(actor, foodId);
+      const result = await markExplored(actor, foodId);
+
+      if (result === false) {
+        throw new Error("The backend did not save this stamp.");
+      }
+
+      return foodId;
     },
 
     onMutate: async (foodId: number) => {
@@ -51,33 +54,53 @@ export function usePassport() {
       const previousIds =
         queryClient.getQueryData<number[]>(EXPLORED_KEY) ?? [];
 
-      if (!previousIds.includes(foodId)) {
-        queryClient.setQueryData<number[]>(
-          EXPLORED_KEY,
-          [...previousIds, foodId],
-        );
-      }
+      queryClient.setQueryData<number[]>(
+        EXPLORED_KEY,
+        previousIds.includes(foodId)
+          ? previousIds
+          : [...previousIds, foodId],
+      );
 
       return { previousIds };
     },
 
-    onError: (_error, _foodId, context) => {
+    onError: (error, _foodId, context) => {
       if (context) {
-        queryClient.setQueryData(EXPLORED_KEY, context.previousIds);
+        queryClient.setQueryData(
+          EXPLORED_KEY,
+          context.previousIds,
+        );
       }
+
+      console.error("Flavor Passport error:", error);
+
+      window.alert(
+        `Stamp failed: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
     },
 
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: EXPLORED_KEY });
+      void queryClient.invalidateQueries({
+        queryKey: EXPLORED_KEY,
+      });
     },
   });
 
   const markVisited = useCallback(
     (foodId: number) => {
+      window.alert(
+        `Stamp tapped! Food ID: ${foodId}\n` +
+          `Backend ready: ${!!actor && !isFetching}`,
+      );
+
       if (exploredIds.has(foodId) || mutation.isPending) return;
 
       if (!actor || isFetching) {
-        console.error("Passport is waiting for the backend to connect.");
+        window.alert(
+          "The backend is still connecting. Please try again.",
+        );
         return;
       }
 
@@ -95,8 +118,9 @@ export function usePassport() {
     collected,
     total: TOTAL_FOODS,
     progress:
-      TOTAL_FOODS === 0 ? 0 : Math.round((collected / TOTAL_FOODS) * 100),
+      TOTAL_FOODS === 0
+        ? 0
+        : Math.round((collected / TOTAL_FOODS) * 100),
     isLoading: query.isLoading || isFetching,
   };
 }
-
