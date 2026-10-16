@@ -38,23 +38,23 @@ export function Navbar() {
         </a>
 
         <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
-          {SECTIONS.map((section) => (
-            <a
-              key={section.id}
-              href={`#${section.id}`}
-              data-ocid={`nav.${section.id}_link`}
-              aria-current={activeId === section.id ? "page" : undefined}
-              className={cn(
-                "rounded-full px-3 py-2 text-base font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                activeId === section.id
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-              )}
-            >
-              {section.shortLabel}
-            </a>
-          ))}
-        </nav>
+  {SECTIONS.map((section) => (
+    <a
+      key={section.id}
+      href={`#${section.id}`}
+      data-ocid={`nav.${section.id}_link`}
+      aria-current={activeId === section.id ? "page" : undefined}
+      className={cn(
+        "rounded-full px-3 py-2 text-base font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        activeId === section.id
+          ? "bg-primary/10 text-primary"
+          : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+      )}
+    >
+      {section.shortLabel}
+    </a>
+  ))}
+</nav>
 
         <div className="flex items-center gap-2">
           <MusicToggle />
