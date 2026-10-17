@@ -20,15 +20,35 @@ interface JourneyStep {
   description: string;
   Icon: typeof Compass;
 }
-
 const TEAM_MEMBERS = [
-  { name: "Trisha Mae Rañosa", role: "Team Leader", leader: true },
-  { name: "Ralph Martin Bentillo", role: "Team Member", leader: false },
-  { name: "Nathaniel Agpoon", role: "Team Member", leader: false },
-  { name: "Giordani Alvarado", role: "Team Member", leader: false },
-  { name: "James Arguelles", role: "Team Member", leader: false },
+  {
+    name: "Trisha Mae Rañosa",
+    role: "Team Leader",
+    leader: true,
+    image: "trisha.jpg.png",
+  },
+  {
+    name: "Ralph Martin Bentillo",
+    role: "Team Member",
+    leader: false,
+  },
+  {
+    name: "Nathaniel Agpoon",
+    role: "Team Member",
+    leader: false,
+    image: "nathaniel.jpg.png",
+  },
+  {
+    name: "Giordani Alvarado",
+    role: "Team Member",
+    leader: false,
+  },
+  {
+    name: "James Arguelles",
+    role: "Team Member",
+    leader: false,
+  },
 ];
-
 const JOURNEY_STEPS: JourneyStep[] = [
   {
     emoji: "🔍",
