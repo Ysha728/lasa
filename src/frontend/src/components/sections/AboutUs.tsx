@@ -202,8 +202,21 @@ export function AboutUs() {
                 </span>
 
                 <span
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-2xl"
-                  aria-hidden="true"
+                  {member.image ? (
+  <img
+    src={`${import.meta.env.BASE_URL}images/${member.image}`}
+    alt={`Portrait of ${member.name}`}
+    className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
+  />
+) : (
+  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+    {member.leader ? (
+      <Crown className="h-8 w-8" aria-hidden="true" />
+    ) : (
+      <Users className="h-8 w-8" aria-hidden="true" />
+    )}
+  </div>
+)}
                 >
                   {step.emoji}
                 </span>
