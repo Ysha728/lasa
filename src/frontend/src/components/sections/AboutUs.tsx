@@ -20,7 +20,15 @@ interface JourneyStep {
   description: string;
   Icon: typeof Compass;
 }
-const TEAM_MEMBERS = [
+
+interface TeamMember {
+  name: string;
+  role: string;
+  leader: boolean;
+  image?: string;
+}
+
+const TEAM_MEMBERS: TeamMember[] = [
   {
     name: "Trisha Mae Rañosa",
     role: "Team Leader",
@@ -49,6 +57,7 @@ const TEAM_MEMBERS = [
     leader: false,
   },
 ];
+
 const JOURNEY_STEPS: JourneyStep[] = [
   {
     emoji: "🔍",
@@ -105,13 +114,16 @@ export function AboutUs() {
   return (
     <Section id="about" label="About Us" className="bg-secondary/40">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* About LASA */}
         <div className="mx-auto max-w-3xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
             About Us
           </p>
+
           <h2 className="mt-3 font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             A student project with a big appetite
           </h2>
+
           <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
             LASA began in a classroom with a simple question: why do some dishes
             feel like home while others feel like an adventure? We are a group
@@ -119,6 +131,7 @@ export function AboutUs() {
             both — the Filipino flavors we grew up with and the international
             dishes we are still discovering.
           </p>
+
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Our goal is to make food culture welcoming and fun, and to give
             everyone a place to discover dishes and share what they taste.
@@ -131,9 +144,11 @@ export function AboutUs() {
             <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
               The People Behind LASA
             </p>
+
             <h3 className="mt-3 font-display text-3xl font-bold text-foreground sm:text-4xl">
               Meet Our Creators
             </h3>
+
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
               We are the student team behind LASA: A Journey Through Local and
               Global Flavors. Together, we created this website to celebrate
@@ -153,13 +168,22 @@ export function AboutUs() {
                     : "border-border bg-card"
                 }`}
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  {member.leader ? (
-                    <Crown className="h-8 w-8" aria-hidden="true" />
-                  ) : (
-                    <Users className="h-8 w-8" aria-hidden="true" />
-                  )}
-                </div>
+                {member.image ? (
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/${member.image}`}
+                    alt={`Portrait of ${member.name}`}
+                    className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    {member.leader ? (
+                      <Crown className="h-8 w-8" aria-hidden="true" />
+                    ) : (
+                      <Users className="h-8 w-8" aria-hidden="true" />
+                    )}
+                  </div>
+                )}
 
                 <h4 className="mt-4 font-display text-lg font-semibold text-foreground">
                   {member.name}
@@ -172,7 +196,9 @@ export function AboutUs() {
                       : "bg-secondary text-secondary-foreground"
                   }`}
                 >
-                  {member.leader && <Crown className="h-3 w-3" />}
+                  {member.leader && (
+                    <Crown className="h-3 w-3" aria-hidden="true" />
+                  )}
                   {member.role}
                 </span>
               </div>
@@ -180,11 +206,12 @@ export function AboutUs() {
           </div>
         </div>
 
-        {/* Journey steps */}
+        {/* LASA Journey */}
         <div className="mt-16">
           <h3 className="text-center font-display text-2xl font-semibold text-foreground sm:text-3xl">
             Your LASA Journey
           </h3>
+
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-muted-foreground sm:text-base">
             Seven simple steps take you from curious visitor to part of the
             community.
@@ -202,21 +229,8 @@ export function AboutUs() {
                 </span>
 
                 <span
-                  {member.image ? (
-  <img
-    src={`${import.meta.env.BASE_URL}images/${member.image}`}
-    alt={`Portrait of ${member.name}`}
-    className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
-  />
-) : (
-  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-    {member.leader ? (
-      <Crown className="h-8 w-8" aria-hidden="true" />
-    ) : (
-      <Users className="h-8 w-8" aria-hidden="true" />
-    )}
-  </div>
-)}
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-2xl"
+                  aria-hidden="true"
                 >
                   {step.emoji}
                 </span>
@@ -228,6 +242,7 @@ export function AboutUs() {
                   />
                   {step.title}
                 </h4>
+
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {step.description}
                 </p>
