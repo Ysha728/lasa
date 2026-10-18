@@ -14,7 +14,12 @@ import { ArrowDown, UtensilsCrossed } from "lucide-react";
 /** The three dishes shown in the hero collage. */
 const HERO_DISHES = FOODS.slice(0, 3);
 
-export function HeroSection() {
+type HeroSectionProps = {
+  onExplore: () => void;
+  onAbout: () => void;
+};
+
+export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
   return (
     <div className="relative overflow-hidden bg-gradient-subtle">
       {/* Decorative background orbs */}
