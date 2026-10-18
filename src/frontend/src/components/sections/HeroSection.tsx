@@ -1,17 +1,13 @@
 
 /**
  * HeroSection — the first thing visitors see.
- *
- * Big LASA wordmark, the site tagline, and a call-to-action that navigates
- * to the food sections. Decorative blurred orbs and a floating food collage
- * give it the playful editorial feel without hurting readability.
+ * Includes the LASA introduction, navigation buttons, and food collage.
  */
 import { Button } from "@/components/ui/button";
 import { FOODS } from "@/data/foods";
 import { TAGLINE } from "@/data/sections";
 import { ArrowDown, UtensilsCrossed } from "lucide-react";
 
-/** The three dishes shown in the hero collage. */
 const HERO_DISHES = FOODS.slice(0, 3);
 
 type HeroSectionProps = {
@@ -33,10 +29,13 @@ export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
       />
 
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-2">
-        {/* Main message and buttons */}
+        {/* Introduction and navigation buttons */}
         <div className="text-center lg:text-left">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground backdrop-blur">
-            <UtensilsCrossed className="h-3.5 w-3.5" aria-hidden="true" />
+            <UtensilsCrossed
+              className="h-3.5 w-3.5"
+              aria-hidden="true"
+            />
             Student Food Journal
           </span>
 
@@ -49,32 +48,30 @@ export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
           </p>
 
           <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-muted-foreground lg:mx-0">
-            Discover Filipino and international dishes, watch how they are made,
-            read their stories, and share your own take — one delicious bite at
-            a time.
+            Discover Filipino and international dishes, watch how they are
+            made, read their stories, and share your own take — one delicious
+            bite at a time.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
             <Button
-              asChild
               size="lg"
+              onClick={onExplore}
               data-ocid="hero.explore_button"
               className="w-full rounded-full bg-primary px-8 text-primary-foreground shadow-glow transition-smooth hover:bg-primary/90 sm:w-auto"
             >
-              <a href="#local-flavors">
-                Start Exploring
-                <ArrowDown className="ml-1 h-4 w-4" aria-hidden="true" />
-              </a>
+              Start Exploring
+              <ArrowDown className="ml-1 h-4 w-4" aria-hidden="true" />
             </Button>
 
             <Button
-              asChild
               size="lg"
               variant="outline"
+              onClick={onAbout}
               data-ocid="hero.about_button"
               className="w-full rounded-full border-border bg-card/70 px-8 backdrop-blur transition-smooth hover:bg-card sm:w-auto"
             >
-              <a href="#about">What is LASA?</a>
+              What is LASA?
             </Button>
           </div>
         </div>
