@@ -1,4 +1,3 @@
-
 import { TOTAL_FOODS } from "@/data/foods";
 import { useCallback, useEffect, useState } from "react";
 
@@ -8,15 +7,21 @@ function loadExplored(): number[] {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) return [];
+
     const parsed: unknown = JSON.parse(saved);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (id): id is number =>
-        typeof id === "number" &&
-        Number.isInteger(id) &&
-        id >= 1 &&
-        id <= TOTAL_FOODS,
-    );
+
+    return [
+      ...new Set(
+        parsed.filter(
+          (id): id is number =>
+            typeof id === "number" &&
+            Number.isInteger(id) &&
+            id >= 1 &&
+            id <= TOTAL_FOODS,
+        ),
+      ),
+    ];
   } catch {
     return [];
   }
@@ -41,19 +46,20 @@ export function usePassport() {
     }
 
     setExploredIds((previous) => {
-      if (previous.includes(foodId)) return previous;
-
-      const updated = [...previous, foodId];
+      const updated = previous.includes(foodId)
+        ? previous.filter((id) => id !== foodId)
+        : [...previous, foodId];
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
       } catch (error) {
         console.error("Could not save Flavor Passport:", error);
-        window.alert("Could not save your stamp. Please check browser storage.");
+        window.alert(
+          "Could not update your passport. Please check browser storage.",
+        );
         return previous;
       }
-
-      return updated;
     });
   }, []);
 
@@ -73,3 +79,4 @@ export function usePassport() {
     isLoading,
   };
 }
+
