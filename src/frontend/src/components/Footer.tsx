@@ -90,14 +90,7 @@ export function Footer() {
           <p className="text-xs text-muted-foreground">
             © {year} LASA. All rights reserved.
           </p>
-          <a
-            href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(hostname)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-muted-foreground transition-smooth hover:text-primary"
-          >
-            © {year}. Built with love using caffeine.ai
-          </a>
+        
         </div>
       </div>
     </footer>
