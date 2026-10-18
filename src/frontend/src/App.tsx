@@ -1,15 +1,9 @@
+
 /**
  * App — the LASA single-page application root.
  *
- * This file is intentionally thin: it wires the shared Layout shell and mounts
- * every page section in the order the navbar links expect. Each section owns
- * its own anchor id (via the shared `Section` wrapper), so the navbar, footer,
- * and scroll-spy all resolve to the right place.
- *
- * Section order (matches `@/data/sections`):
- *   Home → Local Flavors → International Flavors → Food Videos →
- *   Flavor Passport → About Us → FAQ → Reviews → Comments →
- *   Suggestions Box → Contact Us → Follow Us
+ * Manages navigation between website sections and renders
+ * the selected section.
  */
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
@@ -45,6 +39,11 @@ type Tab = (typeof tabs)[number];
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("Home");
 
+  const navigateTo = (tab: Tab) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Layout>
       <nav
@@ -56,10 +55,7 @@ export default function App() {
             <button
               key={tab}
               type="button"
-              onClick={() => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
+              onClick={() => navigateTo(tab)}
               aria-current={activeTab === tab ? "page" : undefined}
               className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === tab
@@ -74,7 +70,11 @@ export default function App() {
       </nav>
 
       <main>
-        {activeTab === "Home" && <HomeSection />}
+        {activeTab === "Home" && (
+          <HomeSection
+            onNavigate={(tab) => navigateTo(tab)}
+          />
+        )}
 
         {(activeTab === "Local Flavors" ||
           activeTab === "International Flavors") && (
