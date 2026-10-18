@@ -74,9 +74,7 @@ export function FollowUs() {
               })}
             </ul>
 
-            <p className="mt-6 font-mono text-xs text-primary-foreground/70">
-              Links are placeholders — swap them for our real pages anytime.
-            </p>
+            
           </div>
         </div>
       </div>
