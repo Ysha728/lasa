@@ -1,12 +1,9 @@
+
 /**
  * HomeSection — composes the Home page from its three parts.
  *
- * Hero → Featured Foods → What is LASA. It also owns the shared favorites
- * state and the details modal, so the hero, the featured strip, and the modal
- * all read from one source of truth.
- *
- * This component owns the `home` Section wrapper so the navbar's Home link
- * resolves to a real anchor.
+ * Hero → Featured Foods → What is LASA.
+ * Handles favorites, food details, and hero button navigation.
  */
 import { FoodDetailsModal } from "@/components/FoodDetailsModal";
 import { Section } from "@/components/Section";
@@ -17,21 +14,35 @@ import { useFavorites } from "@/hooks/useFavorites";
 import type { Food } from "@/types/lasa";
 import { useCallback, useState } from "react";
 
-export function HomeSection() {
-  // Shared favorites state — the heart buttons and the modal both use this.
+type HomeSectionProps = {
+  onNavigate: (tab: "Local Flavors" | "About Us") => void;
+};
+
+export function HomeSection({ onNavigate }: HomeSectionProps) {
+  // Shared favorites state for the featured foods and details modal.
   const { favoriteIds, toggle } = useFavorites();
 
-  // The dish currently open in the details modal (null = closed).
+  // The food currently displayed in the details modal.
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
 
-  const openDetails = useCallback((food: Food) => setSelectedFood(food), []);
-  const closeDetails = useCallback(() => setSelectedFood(null), []);
+  const openDetails = useCallback(
+    (food: Food) => setSelectedFood(food),
+    [],
+  );
+
+  const closeDetails = useCallback(
+    () => setSelectedFood(null),
+    [],
+  );
 
   return (
     <Section id="home" label="Home" className="py-0 md:py-0">
-      <HeroSection />
+      <HeroSection
+        onExplore={() => onNavigate("Local Flavors")}
+        onAbout={() => onNavigate("About Us")}
+      />
 
-      {/* Featured strip sits on a soft lavender band to separate it from the hero. */}
+      {/* Featured foods */}
       <div className="bg-secondary/40 py-16 md:py-24">
         <FeaturedFoods
           favoriteIds={favoriteIds}
@@ -40,13 +51,17 @@ export function HomeSection() {
         />
       </div>
 
+      {/* What is LASA information */}
       <div className="py-16 md:py-24">
         <AboutLasa />
       </div>
 
+      {/* Food details modal */}
       <FoodDetailsModal
         food={selectedFood}
-        isFavorite={selectedFood ? favoriteIds.has(selectedFood.id) : false}
+        isFavorite={
+          selectedFood ? favoriteIds.has(selectedFood.id) : false
+        }
         onToggleFavorite={toggle}
         onClose={closeDetails}
       />
