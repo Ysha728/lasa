@@ -170,7 +170,7 @@ export function AboutUs() {
               >
                 {member.image ? (
                   <img
-                    src={`${import.meta.env.BASE_URL}images/${member.image}`}
+                    src={`${import.meta.env.BASE_URL}assets/images/${member.image}`}
                     alt={`Portrait of ${member.name}`}
                     className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
                     loading="lazy"
