@@ -45,11 +45,7 @@ export function FoodVideos() {
           ))}
         </div>
 
-        {/* Friendly note explaining how to swap in real videos. */}
-        <p className="mt-8 text-center font-mono text-xs text-muted-foreground">
-          Videos are placeholders for now — replace them in{" "}
-          <span className="text-primary">src/data/videos.ts</span>.
-        </p>
+        
       </div>
     </Section>
   );
