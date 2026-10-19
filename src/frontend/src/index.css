@@ -294,3 +294,30 @@ body::before {
   pointer-events: none;
 }
 
+/* Make regular website text larger and bolder */
+body,
+p,
+li,
+label,
+input,
+textarea,
+select,
+button {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* Keep titles and headings at their original sizes */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: inherit;
+}
+
+/* Keep the LASA logo and navigation styling intact */
+header nav a {
+  font-size: inherit;
+}
