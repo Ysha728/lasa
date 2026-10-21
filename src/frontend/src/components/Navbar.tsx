@@ -108,7 +108,7 @@ export function Navbar({ onNavigate }: NavbarProps) {
           id="site-navigation"
           aria-label="Website navigation"
           className={cn(
-            "absolute right-0 top-0 flex h-full w-[88%] max-w-sm flex-col overflow-hidden border-l border-border bg-background text-foreground shadow-elevated transition-transform duration-300 ease-out",
+            "absolute right-0 top-0 flex h-[100dvh] w-[min(88%,24rem)] flex-col overflow-hidden border-l border-border bg-background text-foreground shadow-elevated transition-transform duration-300 ease-out",
             menuOpen ? "translate-x-0" : "translate-x-full"
           )}
         >
@@ -131,7 +131,7 @@ export function Navbar({ onNavigate }: NavbarProps) {
 
           <nav
             aria-label="Website sections"
-            className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-4"
+            className="flex min-h-0 flex-1 flex-col gap-2 overflow-x-hidden overflow-y-auto p-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
           >
             {NAV_ITEMS.map((tab, index) => (
               <button
