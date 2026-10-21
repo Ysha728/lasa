@@ -28,7 +28,7 @@ export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-2">
+      <div className="relative mx-auto grid min-h-[calc(100svh-4rem)] max-w-6xl items-center gap-8 px-4 py-8 sm:px-6 sm:py-12 lg:grid-cols-2 lg:gap-12 lg:py-16">
         {/* Introduction and navigation buttons */}
         <div className="text-center lg:text-left">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground backdrop-blur">
@@ -39,11 +39,10 @@ export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
             Student Food Journal
           </span>
 
-          <h1 className="mt-6 font-display text-6xl font-bold leading-none tracking-tight text-gradient sm:text-7xl md:text-8xl">
+          <h1 className="mt-5 font-display text-5xl font-bold leading-none tracking-tight text-gradient sm:text-7xl lg:text-8xl">
             LASA
           </h1>
-
-          <p className="mx-auto mt-5 max-w-xl font-display text-2xl font-medium leading-snug text-foreground sm:text-3xl lg:mx-0">
+          <p className="mx-auto mt-4 max-w-xl font-display text-xl font-semibold leading-snug text-foreground sm:text-3xl lg:mx-0">
             {TAGLINE}
           </p>
 
@@ -77,7 +76,7 @@ export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
         </div>
 
         {/* Food image collage */}
-        <div className="relative mx-auto grid w-full max-w-md grid-cols-2 gap-4">
+        <div className="relative mx-auto grid w-full max-w-sm grid-cols-2 gap-3 sm:max-w-md sm:gap-4">
           {HERO_DISHES.map((food, index) => (
             <div
               key={food.id}
