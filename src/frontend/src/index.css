@@ -221,12 +221,13 @@
     scrollbar-width: none;
   }
 }
-/* lasa logo background */
+/* lasa background and mobile readability */
 body {
+  background-color: #f8f4ff;
   background-image:
     linear-gradient(
-      rgba(248, 244, 255, 0.78),
-      rgba(248, 244, 255, 0.78)
+      rgba(248, 244, 255, 0.86),
+      rgba(248, 244, 255, 0.86)
     ),
     url("/lasa/assets/images/lasa-background.png");
   background-size: cover;
@@ -236,17 +237,7 @@ body {
   color: #302044;
 }
 
-/* Improve readability on all screens */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(248, 244, 255, 0.15);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Clear, readable text */
+/* Keep content readable over the background */
 body,
 p,
 li,
@@ -258,7 +249,7 @@ select {
   line-height: 1.65;
 }
 
-/* Strong headings */
+/* Keep the existing heading sizes and strengthen contrast */
 h1,
 h2,
 h3,
@@ -266,21 +257,19 @@ h4,
 h5,
 h6 {
   color: #44205f;
-  line-height: 1.3;
 }
 
-/* Readable cards and content panels */
+/* Keep cards and panels readable */
 .bg-card,
 .card,
 .glass {
   color: #302044;
 }
 
-/* Make form fields readable */
 input,
 textarea,
 select {
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.96);
 }
 
 input::placeholder,
@@ -289,35 +278,22 @@ textarea::placeholder {
   opacity: 1;
 }
 
-/* Prevent background image from interfering with clicks */
-body::before {
-  pointer-events: none;
+/* Mobile-specific adjustments */
+@media (max-width: 767px) {
+  body {
+    background-attachment: scroll;
+    background-position: center top;
+    background-size: auto 100vh;
+  }
 }
 
-/* Make regular website text larger and bolder */
-body,
-p,
-li,
-label,
-input,
-textarea,
-select,
-button {
-  font-size: 17px;
-  font-weight: 700;
+/* Prevent horizontal overflow */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
 }
 
-/* Keep titles and headings at their original sizes */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: inherit;
-}
-
-/* Keep the LASA logo and navigation styling intact */
-header nav a {
-  font-size: inherit;
+img {
+  max-width: 100%;
 }
