@@ -17,7 +17,15 @@ type HeroSectionProps = {
 
 export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
   return (
-    <div className="relative overflow-hidden bg-gradient-subtle">
+    <div
+  className="relative overflow-hidden bg-transparent"
+  style={{
+    backgroundImage: "url('/lasa/assets/images/lasa-background.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  }}
+>
       {/* Decorative background orbs */}
       <div
         className="orb -left-24 top-0 h-72 w-72 bg-primary/40"
