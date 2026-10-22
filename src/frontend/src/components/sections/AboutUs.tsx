@@ -2,16 +2,17 @@
 /**
  * AboutUs — introduces LASA, its creators, and the visitor journey.
  */
+
 import { Section } from "@/components/Section";
 import {
   BookOpen,
   Compass,
+  Crown,
   Heart,
   MessageCircle,
   Play,
   Star,
   Users,
-  Crown,
 } from "lucide-react";
 
 interface JourneyStep {
@@ -127,11 +128,11 @@ export function AboutUs() {
           </h2>
 
           <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-            LASA began in a classroom with a simple question: why do some dishes
-            feel like home while others feel like an adventure? We are a group
-            of students who love food, so we built this journal to celebrate
-            both — the Filipino flavors we grew up with and the international
-            dishes we are still discovering.
+            LASA began in a classroom with a simple question: why do some
+            dishes feel like home while others feel like an adventure? We
+            are a group of students who love food, so we built this journal
+            to celebrate both — the Filipino flavors we grew up with and
+            the international dishes we are still discovering.
           </p>
 
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -152,10 +153,10 @@ export function AboutUs() {
             </h3>
 
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              We are the student team behind LASA: A Journey Through Local and
-              Global Flavors. Together, we created this website to celebrate
-              Filipino cuisine and explore delicious dishes from around the
-              world.
+              We are the student team behind LASA: A Journey Through Local
+              and Global Flavors. Together, we created this website to
+              celebrate Filipino cuisine and explore delicious dishes
+              from around the world.
             </p>
           </div>
 
@@ -166,21 +167,22 @@ export function AboutUs() {
                 data-ocid={`about.creator.${index + 1}`}
                 className={`relative flex flex-col items-center rounded-[var(--radius)] border p-6 text-center shadow-subtle transition-smooth hover:-translate-y-1 hover:shadow-elevated ${
                   member.leader
-                    ? "border-primary/50 bg-primary/10 sm:col-span-2 lg:col-span-1"
+                    ? "border-primary/50 bg-[#f5edff] sm:col-span-2 lg:col-span-1"
                     : "border-border bg-card"
                 }`}
               >
-                <img
-  src={`${import.meta.env.BASE_URL}assets/images/${member.image}`}
-  alt={`Portrait of ${member.name}`}
-  onError={(event) => {
-    event.currentTarget.style.display = "none";
-  }}
-  className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
-  loading="lazy"
-/>
+                {member.image ? (
+                  <img
+                    src={`${import.meta.env.BASE_URL}assets/images/${member.image}`}
+                    alt={`Portrait of ${member.name}`}
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                    }}
+                    className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
+                    loading="lazy"
+                  />
                 ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 text-primary">
                     {member.leader ? (
                       <Crown className="h-8 w-8" aria-hidden="true" />
                     ) : (
@@ -217,8 +219,8 @@ export function AboutUs() {
           </h3>
 
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-muted-foreground sm:text-base">
-            Seven simple steps take you from curious visitor to part of the
-            community.
+            Seven simple steps take you from curious visitor to part of
+            the community.
           </p>
 
           <ol className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
