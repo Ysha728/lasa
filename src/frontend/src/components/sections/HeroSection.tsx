@@ -3,6 +3,7 @@
  * HeroSection — the first thing visitors see.
  * Includes the LASA introduction, navigation buttons, and food collage.
  */
+
 import { Button } from "@/components/ui/button";
 import { FOODS } from "@/data/foods";
 import { TAGLINE } from "@/data/sections";
@@ -17,20 +18,13 @@ type HeroSectionProps = {
 
 export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
   return (
-    <div
-  <div className="relative overflow-hidden bg-[#f3eaff]">
-  style={{
-    backgroundImage: "url('/lasa/assets/images/lasa-background.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-  }}
->
+    <div className="relative isolate overflow-hidden bg-[#f3eaff]">
       {/* Decorative background orbs */}
       <div
         className="orb -left-24 top-0 h-72 w-72 bg-primary/40"
         aria-hidden="true"
       />
+
       <div
         className="orb -right-16 top-32 h-80 w-80 bg-accent/30"
         aria-hidden="true"
@@ -50,6 +44,7 @@ export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
           <h1 className="mt-5 font-display text-5xl font-bold leading-none tracking-tight text-gradient sm:text-7xl lg:text-8xl">
             LASA
           </h1>
+
           <p className="mx-auto mt-4 max-w-xl font-display text-xl font-semibold leading-snug text-foreground sm:text-3xl lg:mx-0">
             {TAGLINE}
           </p>
