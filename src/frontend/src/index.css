@@ -232,17 +232,16 @@ body {
   background-color: #f8f4ff;
   background-image:
     linear-gradient(
-      rgba(248, 244, 255, 0.78),
-      rgba(248, 244, 255, 0.78)
+      rgba(248, 244, 255, 0.90),
+      rgba(248, 244, 255, 0.90)
     ),
     url("/lasa/assets/images/lasa-background.png");
-  background-size: cover;
+  background-size: 100% auto;
   background-position: center top;
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: #302044;
 }
-
 /* Improve readability */
 body,
 p,
@@ -288,9 +287,10 @@ textarea::placeholder {
   body {
     background-attachment: scroll;
     background-position: center top;
-    background-size: auto 100vh;
+    background-size: 100% auto;
   }
 }
+
 
 /* Prevent horizontal overflow */
 html,
