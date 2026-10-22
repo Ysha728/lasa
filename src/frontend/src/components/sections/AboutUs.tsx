@@ -33,7 +33,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     name: "Trisha Mae Rañosa",
     role: "Team Leader",
     leader: true,
-    image: "trisha.jpeg",
+    image: "trisha.png",
   },
   {
     name: "Ralph Martin Bentillo",
@@ -51,7 +51,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     name: "Giordani Alvarado",
     role: "Team Member",
     leader: false,
-    image: "giordani.jpeg",
+    image: "giordani.png",
   },
   {
     name: "James Arguelles",
