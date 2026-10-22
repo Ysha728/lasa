@@ -221,23 +221,23 @@
     scrollbar-width: none;
   }
 }
-/* lasa background and mobile readability */
+/* LASA background and readable page styling */
 body {
   background-color: #f8f4ff;
   background-image:
     linear-gradient(
-      rgba(248, 244, 255, 0.86),
-      rgba(248, 244, 255, 0.86)
+      rgba(248, 244, 255, 0.94),
+      rgba(248, 244, 255, 0.94)
     ),
     url("/lasa/assets/images/lasa-background.png");
   background-size: cover;
-  background-position: center;
+  background-position: center top;
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: #302044;
 }
 
-/* Keep content readable over the background */
+/* Improve readability */
 body,
 p,
 li,
@@ -249,7 +249,6 @@ select {
   line-height: 1.65;
 }
 
-/* Keep the existing heading sizes and strengthen contrast */
 h1,
 h2,
 h3,
@@ -259,7 +258,7 @@ h6 {
   color: #44205f;
 }
 
-/* Keep cards and panels readable */
+/* Keep cards readable */
 .bg-card,
 .card,
 .glass {
@@ -269,7 +268,7 @@ h6 {
 input,
 textarea,
 select {
-  background-color: rgba(255, 255, 255, 0.96);
+  background-color: rgba(255, 255, 255, 0.98);
 }
 
 input::placeholder,
@@ -278,7 +277,7 @@ textarea::placeholder {
   opacity: 1;
 }
 
-/* Mobile-specific adjustments */
+/* Mobile adjustments */
 @media (max-width: 767px) {
   body {
     background-attachment: scroll;
