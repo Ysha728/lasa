@@ -172,6 +172,7 @@ export function AboutUs() {
                 }`}
               >
                 
+                
 {member.image ? (
   <img
     src={`${import.meta.env.BASE_URL}assets/images/${member.image}`}
@@ -200,19 +201,11 @@ export function AboutUs() {
     <Users className="h-8 w-8" aria-hidden="true" />
   )}
 </div>
-                
-                  <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    {member.leader ? (
-                      <Crown className="h-8 w-8" aria-hidden="true" />
-                    ) : (
-                      <Users className="h-8 w-8" aria-hidden="true" />
-                    )}
-                  </div>
-                )}
 
-                <h4 className="mt-4 font-display text-lg font-semibold text-foreground">
-                  {member.name}
-                </h4>
+<h4 className="mt-4 font-display text-lg font-semibold text-foreground">
+  {member.name}
+</h4>
+                
 
                 <span
                   className={`mt-2 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
