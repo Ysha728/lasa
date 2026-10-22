@@ -221,13 +221,19 @@
     scrollbar-width: none;
   }
 }
-/* LASA background and readable page styling */
+/* LASA background across the whole website */
+html {
+  min-height: 100%;
+  background: #f8f4ff;
+}
+
 body {
+  min-height: 100vh;
   background-color: #f8f4ff;
   background-image:
     linear-gradient(
-      rgba(248, 244, 255, 0.94),
-      rgba(248, 244, 255, 0.94)
+      rgba(248, 244, 255, 0.78),
+      rgba(248, 244, 255, 0.78)
     ),
     url("/lasa/assets/images/lasa-background.png");
   background-size: cover;
