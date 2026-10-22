@@ -54,7 +54,7 @@ export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
             {TAGLINE}
           </p>
 
-          <p className="mx-auto mt-4 max-w-lg text-base font-semibold leading-relaxed text-[#302044] lg:mx-0"
+          <p className="mx-auto mt-4 max-w-lg text-base font-semibold leading-relaxed text-[#302044] lg:mx-0">
             Discover Filipino and international dishes, watch how they are
             made, read their stories, and share your own take — one delicious
             bite at a time.
