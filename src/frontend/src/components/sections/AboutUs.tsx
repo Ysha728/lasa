@@ -58,6 +58,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     name: "James Arguelles",
     role: "Team Member",
     leader: false,
+    image: "james.png",
   },
 ];
 
