@@ -18,7 +18,7 @@ type HeroSectionProps = {
 export function HeroSection({ onExplore, onAbout }: HeroSectionProps) {
   return (
     <div
-  className="relative overflow-hidden bg-transparent"
+   className="relative overflow-hidden bg-[#f3eaff]">
   style={{
     backgroundImage: "url('/lasa/assets/images/lasa-background.png')",
     backgroundSize: "cover",
