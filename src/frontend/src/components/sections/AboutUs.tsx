@@ -171,17 +171,36 @@ export function AboutUs() {
                     : "border-border bg-card"
                 }`}
               >
-                {member.image ? (
-                  <img
-                    src={`${import.meta.env.BASE_URL}assets/images/${member.image}`}
-                    alt={`Portrait of ${member.name}`}
-                    onError={(event) => {
-                      event.currentTarget.style.display = "none";
-                    }}
-                    className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
-                    loading="lazy"
-                  />
-                ) : (
+                
+{member.image ? (
+  <img
+    src={`${import.meta.env.BASE_URL}assets/images/${member.image}`}
+    alt={`Portrait of ${member.name}`}
+    className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
+    loading="eager"
+    onError={(event) => {
+      event.currentTarget.style.display = "none";
+      const fallback = event.currentTarget
+        .nextElementSibling as HTMLElement | null;
+
+      if (fallback) {
+        fallback.style.display = "flex";
+      }
+    }}
+  />
+) : null}
+
+<div
+  className="h-28 w-28 items-center justify-center rounded-full bg-primary/10 text-primary"
+  style={{ display: member.image ? "none" : "flex" }}
+>
+  {member.leader ? (
+    <Crown className="h-8 w-8" aria-hidden="true" />
+  ) : (
+    <Users className="h-8 w-8" aria-hidden="true" />
+  )}
+</div>
+                
                   <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 text-primary">
                     {member.leader ? (
                       <Crown className="h-8 w-8" aria-hidden="true" />
