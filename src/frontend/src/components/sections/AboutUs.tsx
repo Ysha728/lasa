@@ -170,13 +170,15 @@ export function AboutUs() {
                     : "border-border bg-card"
                 }`}
               >
-                {member.image ? (
-                  <img
-                    src={`${import.meta.env.BASE_URL}assets/images/${member.image}`}
-                    alt={`Portrait of ${member.name}`}
-                    className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
-                    loading="lazy"
-                  />
+                <img
+  src={`${import.meta.env.BASE_URL}assets/images/${member.image}`}
+  alt={`Portrait of ${member.name}`}
+  onError={(event) => {
+    event.currentTarget.style.display = "none";
+  }}
+  className="h-28 w-28 rounded-full border-4 border-primary/20 object-cover shadow-subtle"
+  loading="lazy"
+/>
                 ) : (
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                     {member.leader ? (
